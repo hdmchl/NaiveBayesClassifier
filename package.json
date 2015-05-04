@@ -1,0 +1,19 @@
+{
+  "name": "NaiveBayesClassifier",
+  "version": "0.1.0",
+  "description": "NaiveBayesClassifier is a Multinomial Naive-Bayes Classifier that uses Laplace Smoothing.",
+  "main": "dist/NaiveBayesClassifier.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "https://github.com/hadimichael/NaiveBayesClassifier",
+  "author": "@hadi_michael",
+  "license": "BSD-3-Clause, see LICENSE file",
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-documentation": "^1.0.1",
+    "gulp-jshint": "^1.10.0",
+    "gulp-minify": "0.0.5",
+    "gulp-umd": "^0.1.3"
+  }
+}

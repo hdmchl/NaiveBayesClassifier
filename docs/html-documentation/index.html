@@ -1,0 +1,339 @@
+<html>
+<head>
+  <title> </title>
+  <link href='assets/bass.css' type='text/css' rel='stylesheet' />
+  <link href='assets/style.css' type='text/css' rel='stylesheet' />
+  <link href='assets/github.css' type='text/css' rel='stylesheet' />
+</head>
+<body class='documentation'>
+  <div class='px2'>
+    <div class='clearfix flex flex-stretch mxn2'>
+      <div class='documentation-sidebar relative top-0 bottom-0 right-0 px2 py2 sm-col-3 md-col-2 sm-show'>
+        <div class='font-smaller fixed sm-col-3 md-col-2 top-0 bottom-0 left-0 overflow-auto black bg-cloudy'>
+          <a href="/" class="h5 button block button-transparent"> </a>
+          <div class='px2'>
+              <a
+                href='#naivebayesclassifier'
+                class='regular block'>
+                <code>NaiveBayesClassifier</code>
+              </a>
+                <a
+                  href='#naivebayesclassifier/tokenprobability'
+                  class='button-indent regular block'>
+                  <code>#tokenProbability</code>
+                </a>
+                <a
+                  href='#naivebayesclassifier/learn'
+                  class='button-indent regular block'>
+                  <code>#learn</code>
+                </a>
+                <a
+                  href='#naivebayesclassifier/getorcreatecategory'
+                  class='button-indent regular block'>
+                  <code>#getOrCreateCategory</code>
+                </a>
+                <a
+                  href='#naivebayesclassifier/categorize'
+                  class='button-indent regular block'>
+                  <code>#categorize</code>
+                </a>
+                <a
+                  href='#naivebayesclassifier/frequencytable'
+                  class='button-indent regular block'>
+                  <code>#FrequencyTable</code>
+                </a>
+                <a
+                  href='#naivebayesclassifier/version'
+                  class='button-indent regular block'>
+                  <code>.VERSION</code>
+                </a>
+          </div>
+        </div>
+      </div>
+      <div class='sm-col sm-col-9 md-col-10 flex flex-column'>
+        <div class='flex-auto full-width'>
+<section id='naivebayesclassifier'class='mt2 mb2 py1 px3 keyline-top'>
+  <h3 class='regular'>
+    <a class='black' href='#naivebayesclassifier'>
+      <code>
+        NaiveBayesClassifier<span class='gray'>(options)</span>
+      </code>
+    </a>
+  </h3>
+  <p>NaiveBayesClassifier constructor fuction. Takes an (optional) options object containing:</p>
+<ul>
+<li>{Function} tokenizer =&gt; custom tokenization function</li>
+</ul>
+
+
+    <p>
+      <table class='table-light overflow-hidden bg-cloudy-light'>
+        <thead>
+          <th class='col-3'>parameter</th>
+          <th class='col-3'>type</th>
+          <th class='col-6'>description</th>
+        </thead>
+          <tr>
+            <td>options</td>
+            <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code></td>
+            <td><p>Options to be used for intialisation</p>
+</td>
+          </tr>
+      </table>
+    </p>
+
+      <h4>Returns</h4>
+      <code><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code></code>
+      :
+      <span class='force-inline'>
+        <p>NaiveBayesClassifier</p>
+
+      </span>
+
+
+      <div class='section-indent'>
+<section id='naivebayesclassifier/tokenprobability'class='mt2 mb2 py1 px3 keyline-top'>
+  <h3 class='regular'>
+    <a class='black' href='#naivebayesclassifier/tokenprobability'>
+      <code>
+        tokenProbability<span class='gray'>(token, category)</span>
+      </code>
+    </a>
+  </h3>
+  <p>Calculate probability that a <code>token</code> belongs to a <code>category</code></p>
+
+
+    <p>
+      <table class='table-light overflow-hidden bg-cloudy-light'>
+        <thead>
+          <th class='col-3'>parameter</th>
+          <th class='col-3'>type</th>
+          <th class='col-6'>description</th>
+        </thead>
+          <tr>
+            <td>token</td>
+            <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>category</td>
+            <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code></td>
+            <td></td>
+          </tr>
+      </table>
+    </p>
+
+      <h4>Returns</h4>
+      <code><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></code></code>
+      :
+      <span class='force-inline'>
+        <p>probability</p>
+
+      </span>
+
+
+
+
+</section>
+      </div>
+      <div class='section-indent'>
+<section id='naivebayesclassifier/learn'class='mt2 mb2 py1 px3 keyline-top'>
+  <h3 class='regular'>
+    <a class='black' href='#naivebayesclassifier/learn'>
+      <code>
+        learn<span class='gray'>(text, category)</span>
+      </code>
+    </a>
+  </h3>
+  <p>Train our naive-bayes classifier by telling it what <code>category</code> some <code>text</code> corresponds to.</p>
+
+
+    <p>
+      <table class='table-light overflow-hidden bg-cloudy-light'>
+        <thead>
+          <th class='col-3'>parameter</th>
+          <th class='col-3'>type</th>
+          <th class='col-6'>description</th>
+        </thead>
+          <tr>
+            <td>text</td>
+            <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>category</td>
+            <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code></td>
+            <td></td>
+          </tr>
+      </table>
+    </p>
+
+      <h4>Returns</h4>
+      <code><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code></code>
+      :
+      <span class='force-inline'>
+        <p>NaiveBayesClassifier</p>
+
+      </span>
+
+
+
+
+</section>
+      </div>
+      <div class='section-indent'>
+<section id='naivebayesclassifier/getorcreatecategory'class='mt2 mb2 py1 px3 keyline-top'>
+  <h3 class='regular'>
+    <a class='black' href='#naivebayesclassifier/getorcreatecategory'>
+      <code>
+        getOrCreateCategory<span class='gray'>(categoryName)</span>
+      </code>
+    </a>
+  </h3>
+  <p>Initialize each of our data structure entries for this new category</p>
+
+
+    <p>
+      <table class='table-light overflow-hidden bg-cloudy-light'>
+        <thead>
+          <th class='col-3'>parameter</th>
+          <th class='col-3'>type</th>
+          <th class='col-6'>description</th>
+        </thead>
+          <tr>
+            <td>categoryName</td>
+            <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code></td>
+            <td><p>Name of the category you want to get or create</p>
+</td>
+          </tr>
+      </table>
+    </p>
+
+      <h4>Returns</h4>
+      <code><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code></code>
+      :
+      <span class='force-inline'>
+        <p>category</p>
+
+      </span>
+
+
+
+
+</section>
+      </div>
+      <div class='section-indent'>
+<section id='naivebayesclassifier/categorize'class='mt2 mb2 py1 px3 keyline-top'>
+  <h3 class='regular'>
+    <a class='black' href='#naivebayesclassifier/categorize'>
+      <code>
+        categorize<span class='gray'>(text)</span>
+      </code>
+    </a>
+  </h3>
+  <p>Determine what category <code>text</code> belongs to.
+Use Laplace (add-1) smoothing to adjust for words that do not appear in our vocabulary (unknown words)</p>
+
+
+    <p>
+      <table class='table-light overflow-hidden bg-cloudy-light'>
+        <thead>
+          <th class='col-3'>parameter</th>
+          <th class='col-3'>type</th>
+          <th class='col-6'>description</th>
+        </thead>
+          <tr>
+            <td>text</td>
+            <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code></td>
+            <td></td>
+          </tr>
+      </table>
+    </p>
+
+      <h4>Returns</h4>
+      <code><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code></code>
+      :
+      <span class='force-inline'>
+        <p>cMAP and categories</p>
+
+      </span>
+
+
+
+
+</section>
+      </div>
+      <div class='section-indent'>
+<section id='naivebayesclassifier/frequencytable'class='mt2 mb2 py1 px3 keyline-top'>
+  <h3 class='regular'>
+    <a class='black' href='#naivebayesclassifier/frequencytable'>
+      <code>
+        FrequencyTable<span class='gray'>(tokens)</span>
+      </code>
+    </a>
+  </h3>
+  <p>Build a frequency hashmap where</p>
+<ul>
+<li>the keys are the entries in <code>tokens</code></li>
+<li>the values are the frequency of each entry (<code>tokens</code>)</li>
+</ul>
+
+
+    <p>
+      <table class='table-light overflow-hidden bg-cloudy-light'>
+        <thead>
+          <th class='col-3'>parameter</th>
+          <th class='col-3'>type</th>
+          <th class='col-6'>description</th>
+        </thead>
+          <tr>
+            <td>tokens</td>
+            <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></code></td>
+            <td><p>Normalized word array</p>
+</td>
+          </tr>
+      </table>
+    </p>
+
+      <h4>Returns</h4>
+      <code><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code></code>
+      :
+      <span class='force-inline'>
+        <p>FrequencyTable</p>
+
+      </span>
+
+
+
+
+</section>
+      </div>
+
+      <div class='section-indent'>
+<section id='naivebayesclassifier/version'class='mt2 mb2 py1 px3 keyline-top'>
+  <h3 class='regular'>
+    <a class='black' href='#naivebayesclassifier/version'>
+      <code>
+        VERSION<span class='gray'></span>
+      </code>
+    </a>
+  </h3>
+  <p>Library version number</p>
+
+
+
+
+
+
+
+</section>
+      </div>
+
+</section>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
