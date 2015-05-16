@@ -28,6 +28,10 @@
 					<ul class="dropdown-menu inline">
 						
 						<li>
+							<a href="Categorization.html">Categorization</a>
+						</li>
+						
+						<li>
 							<a href="NaiveBayesClassifier.html">NaiveBayesClassifier</a>
 						</li>
 						
@@ -195,127 +199,6 @@
     
     
 <dl class="details">
-	
-
-	<h5 class="subsection-title">Properties:</h5>
-
-	<dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>docFrequencyCount</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">D</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>totalNumberOfDocuments</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A counter that holds the total number of documents we have learnt from</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>wordFrequencyCount</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Word frequency table for each of our categories</td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>wordCount</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Word count table for each of our categories</td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
 	
 
 	
@@ -564,8 +447,8 @@
 <dd>
     
     <div class="description">
-        Document frequency table for each of our categories
-=> for each category, how often were documents mapped to it
+        Document frequency table for each of our categories.
+For each category, how many documents were mapped to it.
     </div>
     
 
@@ -626,7 +509,7 @@
 <dd>
     
     <div class="description">
-        Options used at intialisation
+        Options defined at intialisation
     </div>
     
 
@@ -688,7 +571,7 @@
 
             
 
-            <td class="description last">Tokenization function provided or default</td>
+            <td class="description last">Tokenization function (can be custom provided or default).</td>
         </tr>
 
 	
@@ -696,6 +579,67 @@
 </table>
 </dl>
 
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="name" id="totalNumberOfDocuments">
+    <h4><span class="type-signature"></span>totalNumberOfDocuments<span class="type-signature"> :Number</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        A counter that holds the total number of documents we have learnt from.
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Number</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
 	
 
 	
@@ -800,7 +744,7 @@
 <dd>
     
     <div class="description">
-        A counter that holds the size of <code>vocabulary</code> hashmap
+        A counter that holds the size of <a href="NaiveBayesClassifier.html#vocabulary"><code>NaiveBayesClassifier#vocabulary</code></a> hashmap
     </div>
     
 
@@ -810,6 +754,130 @@
             <li>
                 
 <span class="param-type">Number</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="name" id="wordCount">
+    <h4><span class="type-signature"></span>wordCount<span class="type-signature"> :Object</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Word count table for each of our categories
+For each category, how many words in total were mapped to it.
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Object</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="name" id="wordFrequencyCount">
+    <h4><span class="type-signature"></span>wordFrequencyCount<span class="type-signature"> :Object</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Word frequency table for each of our categories.
+For each category, how frequently did a given word appear.
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Object</span>
 
 
             </li>
@@ -868,7 +936,8 @@
     
     
     <div class="description">
-        Initialise new classifier from existing NaiveBayesClassifier object. For example, the existing object may have been retrieved from a database or localstorage.
+        Initialise a new classifier from an existing NaiveBayesClassifier object. 
+For example, the existing object may have been retrieved from a database or localstorage.
     </div>
     
 
@@ -998,7 +1067,7 @@
         
             
 <dt>
-    <h4 class="name" id="categorize"><span class="type-signature"></span>categorize<span class="signature">(text)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="categorize"><span class="type-signature"></span>categorize<span class="signature">(text)</span><span class="type-signature"> &rarr; {<a href="Categorization.html">Categorization</a>}</span></h4>
     
     
 </dt>
@@ -1006,8 +1075,8 @@
     
     
     <div class="description">
-        Determine what category `text` belongs to.
-Use Laplace (add-1) smoothing to adjust for words that do not appear in our vocabulary (i.e.unknown words).
+        Determine the category some `text` most likely belongs to.
+Use Laplace (add-1) smoothing to adjust for words that do not appear in our vocabulary (i.e. unknown words).
     </div>
     
 
@@ -1111,7 +1180,7 @@ Use Laplace (add-1) smoothing to adjust for words that do not appear in our voca
     
             
 <div class="param-desc">
-    cMAP - and categories
+    categorization - Object containing the most likely category and its probability.
 </div>
 
 
@@ -1122,7 +1191,7 @@ Use Laplace (add-1) smoothing to adjust for words that do not appear in our voca
 	</dt>
 	<dd>
 		
-<span class="param-type">Object</span>
+<span class="param-type"><a href="Categorization.html">Categorization</a></span>
 
 
 	</dd>
@@ -1473,7 +1542,7 @@ Use Laplace (add-1) smoothing to adjust for words that do not appear in our voca
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Some text that should be learnt</td>
         </tr>
 
 	
@@ -1496,7 +1565,7 @@ Use Laplace (add-1) smoothing to adjust for words that do not appear in our voca
 
             
 
-            <td class="description last"></td>
+            <td class="description last">The category to which the text provided belongs to</td>
         </tr>
 
 	
@@ -1634,7 +1703,7 @@ Use Laplace (add-1) smoothing to adjust for words that do not appear in our voca
 
             
 
-            <td class="description last"></td>
+            <td class="description last">The token (usually a word) for which we want to calculate a probability</td>
         </tr>
 
 	
@@ -1657,7 +1726,7 @@ Use Laplace (add-1) smoothing to adjust for words that do not appear in our voca
 
             
 
-            <td class="description last"></td>
+            <td class="description last">The category we want to calculate for</td>
         </tr>
 
 	
@@ -1747,7 +1816,7 @@ Use Laplace (add-1) smoothing to adjust for words that do not appear in our voca
     <div class="description">
         Given an input string, tokenize it into an array of word tokens.
 This tokenizer adopts a naive "independant bag of words" assumption.
-This is the default tokenization function used if the user does not provide one in (@link options}.
+This is the default tokenization function used if the user does not provide one in <a href="NaiveBayesClassifier.html#options"><code>NaiveBayesClassifier#options</code></a>.
     </div>
     
 
@@ -1851,7 +1920,7 @@ This is the default tokenization function used if the user does not provide one 
     
             
 <div class="param-desc">
-    tokens
+    String tokens
 </div>
 
 
@@ -1900,7 +1969,7 @@ This is the default tokenization function used if the user does not provide one 
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a>
-		on Wed, May 6th, 2015 using the <a
+		on Sat, May 16th, 2015 using the <a
 			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
