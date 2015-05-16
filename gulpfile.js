@@ -9,7 +9,8 @@ var pkg = require('./package.json'),
 
 var path = {
 	scripts: 'src/*.js',
-	dist: 'dist/*.js'
+	dist: 'dist/*.js',
+	readme: 'README.md'
 };
 
 require('gulp-grunt')(gulp); // Require all grunt tasks, we need this because grunt-jsdoc is better than the gulp alternative
@@ -39,4 +40,5 @@ gulp.task('default', function() {
 // Build and generate docs, every time we update the code
 gulp.task('watch', function() {
   gulp.watch(path.scripts, ['default']);
+  gulp.watch(path.readme, ['docs']);
 });

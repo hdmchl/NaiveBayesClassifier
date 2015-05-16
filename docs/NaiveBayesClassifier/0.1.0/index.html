@@ -74,7 +74,49 @@
 
 
     <section class="readme-section">
-        <article><p>README IS COMING SOON</p></article>
+        <article><p>NaiveBayesClassifier is a Multinomial Naive-Bayes Classifier that uses Laplace Smoothing.</p>
+<p>It is based on the OpenCoursesOnline Stanford NLP video series by Professor Dan Jurafsky &amp; Chris Manning, found here: <a href="https://www.youtube.com/watch?v=c3fnHA6yLeY">https://www.youtube.com/watch?v=c3fnHA6yLeY</a>.</p>
+<p>The code itself is extensively documented with inline comments. You will also find auto-generated documentation here.</p>
+<h1>USAGE</h1>
+<h2>Loading NaiveBayesClassifier</h2>
+<p>NaiveBayesClassifier is shipped in a UMD format, meaning that it is available as a CommonJS/AMD module or browser globals.</p>
+<h2>Create a classifier</h2>
+<pre><code class="lang-js">var NaiveBayesClassifier = require('./../../naive-bayes-classifier/dist/NaiveBayesClassifier'),
+    classifier = new NaiveBayesClassifier();</code></pre>
+<h2>Learning</h2>
+<pre><code class="lang-js">classifier.learn('amazing, awesome movie!! Yeah!!', 'positive');
+classifier.learn('terrible, shitty thing. Damn. Sucks!!', 'negative');
+classifier.learn('I dont really know what to make of this.', 'neutral');</code></pre>
+<h2>Categorising</h2>
+<pre><code class="lang-js">classifier.categorize('awesome, cool, amazing!! Yay.');</code></pre>
+<h1>LICENSE (BSD-3-Clause)</h1>
+<p>Copyright (C) 2015, Hadi Michael. All rights reserved.</p>
+<p>NaiveBayesClassifier can be downloaded from: <a href="https://github.com/hadimichael/NaiveBayesClassifier">https://github.com/hadimichael/NaiveBayesClassifier</a></p>
+<p>Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:</p>
+<ul>
+<li><p>Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.</p>
+</li>
+<li><p>Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.</p>
+</li>
+<li><p>Neither the name of the copyright holder nor the names of its contributors 
+may be used to endorse or promote products derived from this software without 
+specific prior written permission.</p>
+</li>
+</ul>
+<p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p></article>
     </section>
 
 

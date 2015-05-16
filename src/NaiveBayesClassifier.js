@@ -133,7 +133,7 @@ NaiveBayesClassifier.VERSION = '0.1.0'; // current version | Note: JS Functions 
  * Initialise a new classifier from an existing NaiveBayesClassifier object. 
  * For example, the existing object may have been retrieved from a database or localstorage.
  *
- * @param  {Object} classifier - An existing NaiveBayesClassifier
+ * @param  {NaiveBayesClassifier} classifier - An existing NaiveBayesClassifier
  * @return {Object} {@link NaiveBayesClassifier}
  */
 NaiveBayesClassifier.withClassifier = function(classifier) {
