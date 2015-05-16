@@ -17,12 +17,20 @@
 /**
  * The NaiveBayesClassifier object holds all the properties and methods used by the classifier.
  *
+ * @property {String} VERSION - Library version number
+ *
  * @constructor
  * @param  {Object} [options] - Options that can be used for intialisation
  * @param  {Function} options.tokenizer - Custom tokenization function
  * @return {Object} {@link NaiveBayesClassifier}
  */
 var NaiveBayesClassifier = function(options) {
+	/**
+	 * @constant
+	 * @property {String} - Instance version number
+	*/
+	this.VERSION = NaiveBayesClassifier.VERSION;
+
 	// DEFAULT TOKENIZER
 	// =============================================================================
 	/**
@@ -129,7 +137,31 @@ NaiveBayesClassifier.VERSION = '0.1.0'; // current version | Note: JS Functions 
  * @return {Object} {@link NaiveBayesClassifier}
  */
 NaiveBayesClassifier.withClassifier = function(classifier) {
-	return new NaiveBayesClassifier(classifier.options);
+	if (classifier.VERSION !== NaiveBayesClassifier.VERSION) {
+		throw new Error('The classifier provided has a version number:' + classifier.VERSION + ' that is different to the library\'s current version number:' + NaiveBayesClassifier.VERSION);
+	}
+
+	var newClassifier = new NaiveBayesClassifier(classifier.options);
+
+	// Load in the vocabulary
+	Object
+	.keys(classifier.vocabulary)
+	.forEach(function(word) {
+		newClassifier.addWordToVocabulary(word);
+	});
+
+	Object
+	.keys(classifier.categories)
+	.forEach(function(category) {
+		newClassifier.getOrCreateCategory(category);
+	});
+
+	newClassifier.docFrequencyCount = classifier.docFrequencyCount;
+	newClassifier.totalNumberOfDocuments = classifier.totalNumberOfDocuments;
+	newClassifier.wordFrequencyCount = classifier.wordFrequencyCount;
+	newClassifier.wordCount = classifier.wordCount;
+
+	return newClassifier;
 };
 
 /**
@@ -167,6 +199,7 @@ NaiveBayesClassifier.prototype.getOrCreateCategory = function(categoryName) {
 		//add new category to our list
 		this.categories[categoryName] = true;
 	}
+
 	return this.categories[categoryName] ? categoryName : undefined;
 };
 
@@ -255,20 +288,13 @@ NaiveBayesClassifier.prototype.tokenProbability = function(token, category) {
 };
 
 /**
- * @class Categorization
- * @private
- * @type {Object}
- * @property {String} category - Category of “maximum a posteriori” (i.e. most likely category), or 'unclassified'
- * @property {Number} probability - The probablity for the category specified
- * @property {Object} categories - Hashmap of probabilities for each category 
- */
-
-/**
  * Determine the category some `text` most likely belongs to.
  * Use Laplace (add-1) smoothing to adjust for words that do not appear in our vocabulary (i.e. unknown words).
  *
  * @param  {String} text - Raw text that needs to be tokenized and categorised.
- * @return {Categorization} categorization - Object containing the most likely category and its probability.
+ * @return {String} category - Category of “maximum a posteriori” (i.e. most likely category), or 'unclassified'
+ * @return {Number} probability - The probablity for the category specified
+ * @return {Object} categories - Hashmap of probabilities for each category 
  */
 NaiveBayesClassifier.prototype.categorize = function (text) {
 	var self = this,  //get reference to instance

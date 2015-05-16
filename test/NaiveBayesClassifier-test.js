@@ -47,33 +47,31 @@ describe('classifier using custom tokenizer', function () {
   });
 });
 
-// describe('classifier serializing/deserializing its state', function () {
-//   it('serializes/deserializes its state as JSON correctly.', function (done) {
-//       var classifier = classifier()
+describe('classifier initialisation and recreation', function () {
+  it('should create a new classifier from an existing classifer object', function (done) {
+    var firstClassifier = new NaiveBayesClassifier();
+    firstClassifier.learn('Fun times were had by all', 'positive');
+    firstClassifier.learn('sad dark rainy day in the cave', 'negative');
 
-//       classifier.learn('Fun times were had by all', 'positive')
-//       classifier.learn('sad dark rainy day in the cave', 'negative')
+    var secondClassifier = NaiveBayesClassifier.withClassifier(firstClassifier);
 
-//       var jsonRepr = classifier.toJson()
+    //check that the classifiers are the same
+    assert.equal(JSON.stringify(firstClassifier), JSON.stringify(secondClassifier));
 
-//       // check serialized values
-//       var state = JSON.parse(jsonRepr)
+    //and that they return the same kind of results
+    var testPhrase = 'sad rainy times on a great day';
+    assert.deepEqual(firstClassifier.categorize(testPhrase), secondClassifier.categorize(testPhrase));
 
-//       // ensure classifier's state values are all in the json representation
-//       classifier.STATE_KEYS.forEach(function (k) {
-//         assert.deepEqual(state[k], classifier[k])
-//       })
+    done();
+  });
 
-//       var revivedClassifier = classifier.fromJson(jsonRepr)
+  it('should raise an Error if the version of the current library is different to the existing classifier\'s version', function() {
+    var classifer = new NaiveBayesClassifier();
+    classifer.VERSION = '';
 
-//       // ensure the revived classifier's state is same as original state
-//       classifier.STATE_KEYS.forEach(function (k) {
-//         assert.deepEqual(revivedClassifier[k], classifier[k])
-//       })
-
-//       done()
-//     })
-// })
+    assert.throws(function () { NaiveBayesClassifier.withClassifier(classifer); }, Error);
+  });
+});
 
 describe('classifier .learn() correctness', function () {
   //sentiment analysis test

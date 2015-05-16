@@ -28,10 +28,6 @@
 					<ul class="dropdown-menu inline">
 						
 						<li>
-							<a href="Categorization.html">Categorization</a>
-						</li>
-						
-						<li>
 							<a href="NaiveBayesClassifier.html">NaiveBayesClassifier</a>
 						</li>
 						
@@ -199,6 +195,58 @@
     
     
 <dl class="details">
+	
+
+	<h5 class="subsection-title">Properties:</h5>
+
+	<dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>VERSION</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Library version number</td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
 	
 
 	
@@ -640,6 +688,101 @@ For each category, how many documents were mapped to it.
 
     
 <dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="name" id="VERSION">
+    <h4><span class="type-signature">&lt;constant> </span>VERSION<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+
+    
+
+    
+<dl class="details">
+	
+
+	<h5 class="subsection-title">Properties:</h5>
+
+	<dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Instance version number</td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
 	
 
 	
@@ -1201,7 +1344,7 @@ For example, the existing object may have been retrieved from a database or loca
         
             
 <dt>
-    <h4 class="name" id="categorize"><span class="type-signature"></span>categorize<span class="signature">(text)</span><span class="type-signature"> &rarr; {<a href="Categorization.html">Categorization</a>}</span></h4>
+    <h4 class="name" id="categorize"><span class="type-signature"></span>categorize<span class="signature">(text)</span><span class="type-signature"> &rarr; {String}</span></h4>
     
     
 </dt>
@@ -1311,10 +1454,10 @@ Use Laplace (add-1) smoothing to adjust for words that do not appear in our voca
     
     
     <h5>Returns:</h5>
-    
-            
+    <ul>
+            <li>
 <div class="param-desc">
-    categorization - Object containing the most likely category and its probability.
+    category - Category of “maximum a posteriori” (i.e. most likely category), or 'unclassified'
 </div>
 
 
@@ -1325,14 +1468,56 @@ Use Laplace (add-1) smoothing to adjust for words that do not appear in our voca
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="Categorization.html">Categorization</a></span>
+<span class="param-type">String</span>
 
 
 	</dd>
 </dl>
 
-
+</li>
         
+            <li>
+<div class="param-desc">
+    probability - The probablity for the category specified
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Number</span>
+
+
+	</dd>
+</dl>
+
+</li>
+        
+            <li>
+<div class="param-desc">
+    categories - Hashmap of probabilities for each category
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
+
+
+	</dd>
+</dl>
+
+</li>
+        </ul>
     
     
 </dd>
