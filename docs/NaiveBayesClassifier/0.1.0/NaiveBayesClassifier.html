@@ -1067,6 +1067,140 @@ For example, the existing object may have been retrieved from a database or loca
         
             
 <dt>
+    <h4 class="name" id="addWordToVocabulary"><span class="type-signature"></span>addWordToVocabulary<span class="signature">(word)</span><span class="type-signature"> &rarr; {undefined}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Add a word to our vocabulary and increment the <a href="NaiveBayesClassifier.html#vocabularySize"><code>NaiveBayesClassifier#vocabularySize</code></a> counter.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>word</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Word to be added to the vocabulary</td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">undefined</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="categorize"><span class="type-signature"></span>categorize<span class="signature">(text)</span><span class="type-signature"> &rarr; {<a href="Categorization.html">Categorization</a>}</span></h4>
     
     
@@ -1206,7 +1340,7 @@ Use Laplace (add-1) smoothing to adjust for words that do not appear in our voca
         
             
 <dt>
-    <h4 class="name" id="FrequencyTable"><span class="type-signature"></span>FrequencyTable<span class="signature">(tokens)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="frequencyTable"><span class="type-signature"></span>frequencyTable<span class="signature">(tokens)</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
     
 </dt>
@@ -1214,9 +1348,8 @@ Use Laplace (add-1) smoothing to adjust for words that do not appear in our voca
     
     
     <div class="description">
-        Build a frequency hashmap where
-- the keys are the entries in `tokens`
-- the values are the frequency of each entry (`tokens`)
+        Build a frequency hashmap where the keys are the entries in `tokens`
+and the values are the frequency of each entry (`token`).
     </div>
     
 
@@ -1354,7 +1487,8 @@ Use Laplace (add-1) smoothing to adjust for words that do not appear in our voca
     
     
     <div class="description">
-        Initialize each of our data structure entries for this new category
+        Retrieve a category.
+If it does not exist, then initialize the necessary data structures for a new category.
     </div>
     
 

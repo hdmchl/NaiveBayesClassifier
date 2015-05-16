@@ -4,23 +4,39 @@ var pkg = require('./package.json'),
 	gulp = require('gulp'),
 	umd = require('gulp-umd'),
 	minify = require('gulp-minify'),
-	jshint = require('gulp-jshint');
+	jshint = require('gulp-jshint'),
+	mocha = require('gulp-mocha');
 
-require('gulp-grunt')(gulp); //require all grunt tasks, we need this because grunt-jsdoc is better than the gulp alternative
+var path = {
+	scripts: 'src/*.js',
+	dist: 'dist/*.js'
+};
+
+require('gulp-grunt')(gulp); // Require all grunt tasks, we need this because grunt-jsdoc is better than the gulp alternative
 
 gulp.task('docs', function () {
 	gulp.start('grunt-jsdoc');
 });
 
 gulp.task('build', function() {
-	gulp.src(scriptFiles)
+	gulp.src(path.scripts)
 		.pipe(jshint())
 		.pipe(jshint.reporter('default'))
-		.pipe(umd()) //Ship in 'regular module' UMD format: returnExports.js
+		.pipe(umd()) // Ship in 'regular module' UMD format: returnExports.js
 		.pipe(minify())
 		.pipe(gulp.dest('./dist/'));
 });
 
+gulp.task('test', function() {
+	gulp.src(path.dist)
+		.pipe(mocha({reporter: 'nyan'}));
+});
+
 gulp.task('default', function() {
-	gulp.run('build', 'docs');
+	gulp.run('build', 'test', 'docs');
+});
+
+// Build and generate docs, every time we update the code
+gulp.task('watch', function() {
+  gulp.watch(path.scripts, ['default']);
 });

@@ -50,8 +50,8 @@ var NaiveBayesClassifier = function(options) {
 	 */
 	this.options = {};
 
-	if (!options) {
-		if (typeof options !== 'object') {
+	if (!!options) {
+		if (typeof options !== 'object' || Array.isArray(options)) {
 			throw new TypeError('NaiveBayesClassifier got invalid `options`: `' + options + '`. Please pass in an object.');
 		}
 		this.options = options;
@@ -132,16 +132,17 @@ NaiveBayesClassifier.withClassifier = function(classifier) {
 	return new NaiveBayesClassifier(classifier.options);
 };
 
+/**
+ * Add a word to our vocabulary and increment the {@link NaiveBayesClassifier#vocabularySize} counter.
+ *
+ * @param  {String} word - Word to be added to the vocabulary
+ * @return {undefined}
+ */
 NaiveBayesClassifier.prototype.addWordToVocabulary = function(word) {
 	if (!this.vocabulary[word]) {
 		this.vocabulary[word] = true;
 		this.vocabularySize += 1;
 	}
-};
-
-NaiveBayesClassifier.prototype.getVocabularySize = function() {
-	this.vocabularySize = Object.keys(this.vocabulary).length;
-	return this.vocabularySize;
 };
 
 /**
@@ -176,7 +177,7 @@ NaiveBayesClassifier.prototype.getOrCreateCategory = function(categoryName) {
  * @param  {Array} tokens - Normalized word array
  * @return {Object} FrequencyTable
  */
-NaiveBayesClassifier.prototype.FrequencyTable = function(tokens) {
+NaiveBayesClassifier.prototype.frequencyTable = function(tokens) {
 	var frequencyTable = {};
 
 	tokens.forEach(function (token) {
@@ -200,13 +201,13 @@ NaiveBayesClassifier.prototype.FrequencyTable = function(tokens) {
 NaiveBayesClassifier.prototype.learn = function(text, category) {
 	var self = this; //get reference to instance
 
-	category = self.Category(category); //get or create a category
+	category = self.getOrCreateCategory(category); //get or create a category
 
 	self.docFrequencyCount[category] += 1; //update our count of how many documents mapped to this category
 	self.totalNumberOfDocuments += 1; //update the total number of documents we have learned from
 
 	var tokens = self.tokenizer(text); //break up the text into tokens
-	var tokenFrequencyTable = self.FrequencyTable(tokens); //get a frequency count for each token in the text
+	var tokenFrequencyTable = self.frequencyTable(tokens); //get a frequency count for each token in the text
 
 	// Update our vocabulary and our word frequency counts for this category
 	// =============================================================================
@@ -250,7 +251,7 @@ NaiveBayesClassifier.prototype.tokenProbability = function(token, category) {
 
 	//use laplace Add-1 Smoothing equation
 	//=> ( P(wi|Cj) = count(wi,cj) + 1 ) / ( SUM[(for w in v) count(w,cj)] + |VocabSize| )
-	return ( wordFrequencyCount + 1 ) / ( wordCount + this.getVocabularySize() );
+	return ( wordFrequencyCount + 1 ) / ( wordCount + this.vocabularySize );
 };
 
 /**
@@ -277,7 +278,7 @@ NaiveBayesClassifier.prototype.categorize = function (text) {
 			categoryProbabilities = {}; //probabilities of all categories
 
 	var tokens = self.tokenizer(text),
-		tokenFrequencyTable = self.FrequencyTable(tokens);
+		tokenFrequencyTable = self.frequencyTable(tokens);
 
 	Object
 	.keys(self.categories)
@@ -328,7 +329,7 @@ NaiveBayesClassifier.prototype.categorize = function (text) {
 		categoryProbabilities[category] = categoryProbability;
 	});
 
-	//normalise (out of 1) the probabilities, so that they make a bit more sense to the average person
+	//normalise (out of 1) the probabilities, so that they are easier to relate to
 	Object
 	.keys(categoryProbabilities)
 	.forEach(function(category) {

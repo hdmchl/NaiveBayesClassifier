@@ -18,6 +18,8 @@
   "trailing": true,
   "smarttabs": true,
   "globals": {
-    "define": true
+    "define": true,
+    "describe": true,
+    "it": true
   }
 }

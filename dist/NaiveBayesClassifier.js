@@ -24,35 +24,23 @@
 'use strict';
 
 /**
- * NaiveBayesClassifier constructor fuction. Takes an (optional) options object containing:
- *   - {Function} tokenizer => custom tokenization function
+ * The NaiveBayesClassifier object holds all the properties and methods used by the classifier.
  *
  * @constructor
- * @param  {Object} options - Options to be used for intialisation
- * @return {Object} NaiveBayesClassifier
+ * @param  {Object} [options] - Options that can be used for intialisation
+ * @param  {Function} options.tokenizer - Custom tokenization function
+ * @return {Object} {@link NaiveBayesClassifier}
  */
 var NaiveBayesClassifier = function(options) {
-	// OPTIONS
-	// =============================================================================
-	this.options = {};
-
-	if (!options) {
-		if (typeof options !== 'object') {
-			throw new TypeError('NaiveBayesClassifier got invalid `options`: `' + options + '`. Please pass in an object.');
-		}
-		this.options = options;
-	}
-
-	// TOKENIZER
+	// DEFAULT TOKENIZER
 	// =============================================================================
 	/**
 	 * Given an input string, tokenize it into an array of word tokens.
-	 * This tokenizer adopts a naive "Bag of words" assumption.
-	 * This is the default tokenization function used if the user does not provide one in `options`.
+	 * This tokenizer adopts a naive "independant bag of words" assumption.
+	 * This is the default tokenization function used if the user does not provide one in {@link NaiveBayesClassifier#options}.
 	 *
-	 * @private
-	 * @param  {String} text
-	 * @return {Array}
+	 * @param  {String} text - Text to be tokenized
+	 * @return {Array} String tokens
 	 */
 	var defaultTokenizer = function(text) {
 		//remove punctuation from text (anything that isn't a word char or a space), and enforce lowercase
@@ -62,61 +50,113 @@ var NaiveBayesClassifier = function(options) {
 		return sanitized.split(/\s+/);
 	};
 
+	// OPTIONS
+	// =============================================================================
+	/**
+	 * Options defined at intialisation
+	 * @type {Object}
+	 * @property {Function} tokenizer - Tokenization function (can be custom provided or default).
+	 */
+	this.options = {};
+
+	if (!!options) {
+		if (typeof options !== 'object' || Array.isArray(options)) {
+			throw new TypeError('NaiveBayesClassifier got invalid `options`: `' + options + '`. Please pass in an object.');
+		}
+		this.options = options;
+	}
+
 	this.tokenizer = this.options.tokenizer || defaultTokenizer;
 	
-	// VOCABULARY
+	// VOCABULARY - initialise our vocabulary and its size
 	// =============================================================================
-	//initialize our vocabulary and its size
+	/**
+	 * Hashmap holding all words that have been learnt
+	 * @type {Object}
+	 */
 	this.vocabulary = {};
+
+	/**
+	 * A counter that holds the size of {@link NaiveBayesClassifier#vocabulary} hashmap
+	 * @type {Number}
+	 */
 	this.vocabularySize = 0;
 
-	// CATEGORIES - hashmap of our category names
+	// CATEGORIES - initilise categories
 	// =============================================================================
+	/**
+	 * Hashmap holding all category names
+	 * @type {Object}
+	 */
 	this.categories = {};
 
 	// PRIOR PROBABILITY: P(Cj) = docCount(C=cj) / Ndoc
 	// =============================================================================
 
-	//document frequency table for each of our categories
-	//=> for each category, how often were documents mapped to it
+	/**
+	 * Document frequency table for each of our categories.
+	 * For each category, how many documents were mapped to it.
+	 * @type {Object}
+	 */
 	this.docFrequencyCount = {}; //docCount(class)
 
+	/**
+	 * A counter that holds the total number of documents we have learnt from.
+	 * @type {Number}
+	 */
 	this.totalNumberOfDocuments = 0; //Ndoc => number of documents we have learned from
 
 	// LIKELIHOOD: P(wi|Cj) = count(wi,cj) / SUM[(for w in v) count(w,cj)]
 	// =============================================================================
 
-	//word frequency table for each of our categories
-	//=> for each category, how frequent was a given word mapped to it
+	/**
+	 * Word frequency table for each of our categories.
+	 * For each category, how frequently did a given word appear.
+	 * @type {Object}
+	 */
 	this.wordFrequencyCount = {}; //count(wi,cj)
 
-	//word count table for each of our categories
-	//=> for each category, how many words in total were mapped to it
+	/**
+	 * Word count table for each of our categories
+	 * For each category, how many words in total were mapped to it.
+	 * @type {Object}
+	 */
 	this.wordCount = {}; //SUM[(for w in v) count(w,cj)
 };
 
 /**
- * Library version number
+ * @constant
+ * @property {String} - Library version number
  */
 NaiveBayesClassifier.VERSION = '0.1.0'; // current version | Note: JS Functions are first class Objects
 
+/**
+ * Initialise a new classifier from an existing NaiveBayesClassifier object. 
+ * For example, the existing object may have been retrieved from a database or localstorage.
+ *
+ * @param  {Object} classifier - An existing NaiveBayesClassifier
+ * @return {Object} {@link NaiveBayesClassifier}
+ */
 NaiveBayesClassifier.withClassifier = function(classifier) {
 	return new NaiveBayesClassifier(classifier.options);
 };
 
+/**
+ * Add a word to our vocabulary and increment the {@link NaiveBayesClassifier#vocabularySize} counter.
+ *
+ * @param  {String} word - Word to be added to the vocabulary
+ * @return {undefined}
+ */
 NaiveBayesClassifier.prototype.addWordToVocabulary = function(word) {
 	if (!this.vocabulary[word]) {
 		this.vocabulary[word] = true;
 		this.vocabularySize += 1;
 	}
 };
-NaiveBayesClassifier.prototype.getVocabularySize = function() {
-	this.vocabularySize = Object.keys(this.vocabulary).length;
-	return this.vocabularySize;
-};
 
 /**
- * Initialize each of our data structure entries for this new category
+ * Retrieve a category.
+ * If it does not exist, then initialize the necessary data structures for a new category.
  *
  * @param  {String} categoryName - Name of the category you want to get or create
  * @return {String} category
@@ -140,14 +180,13 @@ NaiveBayesClassifier.prototype.getOrCreateCategory = function(categoryName) {
 };
 
 /**
- * Build a frequency hashmap where
- * - the keys are the entries in `tokens`
- * - the values are the frequency of each entry (`tokens`)
+ * Build a frequency hashmap where the keys are the entries in `tokens`
+ * and the values are the frequency of each entry (`token`).
  *
  * @param  {Array} tokens - Normalized word array
  * @return {Object} FrequencyTable
  */
-NaiveBayesClassifier.prototype.FrequencyTable = function(tokens) {
+NaiveBayesClassifier.prototype.frequencyTable = function(tokens) {
 	var frequencyTable = {};
 
 	tokens.forEach(function (token) {
@@ -164,20 +203,20 @@ NaiveBayesClassifier.prototype.FrequencyTable = function(tokens) {
 /**
  * Train our naive-bayes classifier by telling it what `category` some `text` corresponds to.
  *
- * @param  {String} text
- * @param  {String} category
+ * @param  {String} text - Some text that should be learnt
+ * @param  {String} category - The category to which the text provided belongs to
  * @return {Object} NaiveBayesClassifier
  */
 NaiveBayesClassifier.prototype.learn = function(text, category) {
 	var self = this; //get reference to instance
 
-	category = self.Category(category); //get or create a category
+	category = self.getOrCreateCategory(category); //get or create a category
 
 	self.docFrequencyCount[category] += 1; //update our count of how many documents mapped to this category
 	self.totalNumberOfDocuments += 1; //update the total number of documents we have learned from
 
 	var tokens = self.tokenizer(text); //break up the text into tokens
-	var tokenFrequencyTable = self.FrequencyTable(tokens); //get a frequency count for each token in the text
+	var tokenFrequencyTable = self.frequencyTable(tokens); //get a frequency count for each token in the text
 
 	// Update our vocabulary and our word frequency counts for this category
 	// =============================================================================
@@ -205,8 +244,8 @@ NaiveBayesClassifier.prototype.learn = function(text, category) {
 /**
  * Calculate probability that a `token` belongs to a `category`
  *
- * @param  {String} token
- * @param  {String} category
+ * @param  {String} token - The token (usually a word) for which we want to calculate a probability
+ * @param  {String} category - The category we want to calculate for
  * @return {Number} probability
  */
 NaiveBayesClassifier.prototype.tokenProbability = function(token, category) {
@@ -221,15 +260,24 @@ NaiveBayesClassifier.prototype.tokenProbability = function(token, category) {
 
 	//use laplace Add-1 Smoothing equation
 	//=> ( P(wi|Cj) = count(wi,cj) + 1 ) / ( SUM[(for w in v) count(w,cj)] + |VocabSize| )
-	return ( wordFrequencyCount + 1 ) / ( wordCount + this.getVocabularySize() );
+	return ( wordFrequencyCount + 1 ) / ( wordCount + this.vocabularySize );
 };
 
 /**
- * Determine what category `text` belongs to.
- * Use Laplace (add-1) smoothing to adjust for words that do not appear in our vocabulary (unknown words)
+ * @class Categorization
+ * @private
+ * @type {Object}
+ * @property {String} category - Category of “maximum a posteriori” (i.e. most likely category), or 'unclassified'
+ * @property {Number} probability - The probablity for the category specified
+ * @property {Object} categories - Hashmap of probabilities for each category 
+ */
+
+/**
+ * Determine the category some `text` most likely belongs to.
+ * Use Laplace (add-1) smoothing to adjust for words that do not appear in our vocabulary (i.e. unknown words).
  *
- * @param  {String} text
- * @return {Object} cMAP and categories
+ * @param  {String} text - Raw text that needs to be tokenized and categorised.
+ * @return {Categorization} categorization - Object containing the most likely category and its probability.
  */
 NaiveBayesClassifier.prototype.categorize = function (text) {
 	var self = this,  //get reference to instance
@@ -239,7 +287,7 @@ NaiveBayesClassifier.prototype.categorize = function (text) {
 			categoryProbabilities = {}; //probabilities of all categories
 
 	var tokens = self.tokenizer(text),
-		tokenFrequencyTable = self.FrequencyTable(tokens);
+		tokenFrequencyTable = self.frequencyTable(tokens);
 
 	Object
 	.keys(self.categories)
@@ -290,7 +338,7 @@ NaiveBayesClassifier.prototype.categorize = function (text) {
 		categoryProbabilities[category] = categoryProbability;
 	});
 
-	//normalise (out of 1) the probabilities, so that they make a bit more sense to the average person
+	//normalise (out of 1) the probabilities, so that they are easier to relate to
 	Object
 	.keys(categoryProbabilities)
 	.forEach(function(category) {
