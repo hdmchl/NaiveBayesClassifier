@@ -8,12 +8,12 @@ The code itself is extensively documented with inline comments. You will also fi
 
 ##Loading NaiveBayesClassifier
 
-NaiveBayesClassifier is shipped in a UMD format, meaning that it is available as a CommonJS/AMD module or browser globals.
+NaiveBayesClassifier is shipped in a UMD format, meaning that it is available as a CommonJS/AMD module or browser global.
 
 ##Create a classifier
 
 ```js
-var NaiveBayesClassifier = require('./../../naive-bayes-classifier/dist/NaiveBayesClassifier'),
+var NaiveBayesClassifier = require('NaiveBayesClassifier'),
 	classifier = new NaiveBayesClassifier();
 ```
 
