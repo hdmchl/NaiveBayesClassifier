@@ -50,4 +50,5 @@ gulp.task('deploy', function() {
 gulp.task('watch', function() {
   gulp.watch(path.scripts, ['default']);
   gulp.watch(path.readme, ['docs']);
+  gulp.watch(path.test, ['test']);
 });

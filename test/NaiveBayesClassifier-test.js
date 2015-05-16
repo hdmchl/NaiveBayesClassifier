@@ -21,10 +21,8 @@ describe('new NaiveBayesClassifier()', function () {
       assert.throws(function () { new NaiveBayesClassifier(invalidOption); }, TypeError); // check that it's a TypeError
     });
   });
-});
 
-describe('classifier using custom tokenizer', function () {
-  it('should use custom tokenization function if one is provided in `options`.', function () {
+  it('should use custom tokenization function, if one is provided in `options`.', function () {
     var splitOnChar = function (text) {
       return text.split('');
     };
@@ -48,7 +46,7 @@ describe('classifier using custom tokenizer', function () {
 });
 
 describe('classifier initialisation and recreation', function () {
-  it('should create a new classifier from an existing classifer object', function (done) {
+  it('should create a new (identical) classifier from an existing classifer object', function (done) {
     var firstClassifier = new NaiveBayesClassifier();
     firstClassifier.learn('Fun times were had by all', 'positive');
     firstClassifier.learn('sad dark rainy day in the cave', 'negative');
@@ -65,17 +63,48 @@ describe('classifier initialisation and recreation', function () {
     done();
   });
 
+  it('should raise a TypeError if the classifier provided is not of the correct type or has been corrupted', function() {
+    //Test overall object
+    var invalidObjectOptions = [ true, 1, 'a', [], function(){} ];
+
+    invalidObjectOptions.forEach(function (invalidOption) {
+      assert.throws(function () { NaiveBayesClassifier.withClassifier(invalidOption); }, Error);
+      assert.throws(function () { NaiveBayesClassifier.withClassifier(invalidOption); }, TypeError);
+    });
+
+    //Test for corruption
+    var propertiesToTest = ['vocabulary', 'categories', 'docFrequencyCount', 'wordFrequencyCount', 'wordCount'];
+
+    propertiesToTest.forEach(function (property) {
+      var classifer = new NaiveBayesClassifier();
+
+      invalidObjectOptions.forEach(function (invalidOption) {
+        classifer[property] = invalidOption;
+        assert.throws(function () { NaiveBayesClassifier.withClassifier(classifer); }, Error);
+        assert.throws(function () { NaiveBayesClassifier.withClassifier(classifer); }, TypeError);
+      });
+    });
+
+    var invalidNumberOptions = [ -1, {}, true, 'a', [], function(){} ];
+    invalidNumberOptions.forEach(function (invalidOption) {
+      var classifer = new NaiveBayesClassifier();
+      classifer.totalNumberOfDocuments = invalidOption;
+      assert.throws(function () { NaiveBayesClassifier.withClassifier(classifer); }, Error);
+      assert.throws(function () { NaiveBayesClassifier.withClassifier(classifer); }, TypeError);
+    });
+  });
+
   it('should raise an Error if the version of the current library is different to the existing classifier\'s version', function() {
     var classifer = new NaiveBayesClassifier();
-    classifer.VERSION = '';
+    classifer.VERSION = ''; //clear the version
 
     assert.throws(function () { NaiveBayesClassifier.withClassifier(classifer); }, Error);
   });
 });
 
-describe('classifier .learn() correctness', function () {
+describe('classifier correctness', function () {
   //sentiment analysis test
-  it('categorizes correctly for `positive` and `negative` categories', function (done) {
+  it('should categorizes correctly for `positive` and `negative` categories', function (done) {
 
     var classifier = new NaiveBayesClassifier();
 
@@ -96,7 +125,7 @@ describe('classifier .learn() correctness', function () {
   });
 
   //topic analysis test
-  it('categorizes correctly for `chinese` and `japanese` categories', function (done) {
+  it('should categorizes correctly for `chinese` and `japanese` categories', function (done) {
 
     var classifier = new NaiveBayesClassifier();
 

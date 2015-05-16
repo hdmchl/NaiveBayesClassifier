@@ -1,14 +1,9 @@
 /* 
  * @name: NaiveBayesClassifier
- * @description: NaiveBayesClassifier is a Multinomial Naive-Bayes Classifier 
- *  that uses Laplace Smoothing. It is based on the OpenCoursesOnline Stanford 
- *  NLP video series by Professor Dan Jurafsky & Chris Manning, 
- *  found here: https://www.youtube.com/watch?v=c3fnHA6yLeY
- *  This library is shipped in UMD format.
+ * @description: NaiveBayesClassifier is a Multinomial Naive-Bayes Classifier that uses Laplace Smoothing.
  * @version: 0.1.0
  * @author: Hadi Michael (http://hadi.io)
  * @repository: https://github.com/hadimichael/NaiveBayesClassifier
- * @acknowledgements: This library modifies and extends work by Tolga Tezel (https://github.com/ttezel)
  * @license: BSD-3-Clause, see LICENSE file
 */
 
@@ -137,29 +132,58 @@ NaiveBayesClassifier.VERSION = '0.1.0'; // current version | Note: JS Functions 
  * @return {Object} {@link NaiveBayesClassifier}
  */
 NaiveBayesClassifier.withClassifier = function(classifier) {
-	if (classifier.VERSION !== NaiveBayesClassifier.VERSION) {
-		throw new Error('The classifier provided has a version number:' + classifier.VERSION + ' that is different to the library\'s current version number:' + NaiveBayesClassifier.VERSION);
+	var typeErrorMessage = 'The classifier provided is not of the correct type or has been corrupted.';
+	if (typeof classifier !== 'object' || Array.isArray(classifier)) {
+		throw new TypeError(typeErrorMessage);
 	}
 
-	var newClassifier = new NaiveBayesClassifier(classifier.options);
+	var newClassifier = new NaiveBayesClassifier(classifier.options); //this should throw an error itself, if options isn't correct
 
 	// Load in the vocabulary
+	if (typeof classifier.vocabulary !== 'object' || Array.isArray(classifier.vocabulary)) {
+		throw new TypeError(typeErrorMessage + ' Please check `classifier.vocabulary`:' + classifier.vocabulary);
+	}
 	Object
 	.keys(classifier.vocabulary)
 	.forEach(function(word) {
 		newClassifier.addWordToVocabulary(word);
 	});
 
+	// Load in categories
+	if (typeof classifier.categories !== 'object' || Array.isArray(classifier.categories)) {
+		throw new TypeError(typeErrorMessage + ' Please check `classifier.categories`:' + classifier.categories);
+	}
 	Object
 	.keys(classifier.categories)
 	.forEach(function(category) {
 		newClassifier.getOrCreateCategory(category);
 	});
 
+	// Load in other properties
+	if (typeof classifier.docFrequencyCount !== 'object' || Array.isArray(classifier.docFrequencyCount)) {
+		throw new TypeError(typeErrorMessage + ' Please check `classifier.docFrequencyCount`:' + classifier.docFrequencyCount);
+	}
 	newClassifier.docFrequencyCount = classifier.docFrequencyCount;
+
+	if (typeof classifier.totalNumberOfDocuments !== 'number' || classifier.totalNumberOfDocuments < 0) {
+		throw new TypeError(typeErrorMessage + ' Please check `classifier.totalNumberOfDocuments`:' + classifier.totalNumberOfDocuments);
+	}
 	newClassifier.totalNumberOfDocuments = classifier.totalNumberOfDocuments;
+	
+	if (typeof classifier.wordFrequencyCount !== 'object' || Array.isArray(classifier.wordFrequencyCount)) {
+		throw new TypeError(typeErrorMessage + ' Please check `classifier.wordFrequencyCount`:' + classifier.wordFrequencyCount);
+	}
 	newClassifier.wordFrequencyCount = classifier.wordFrequencyCount;
+	
+	if (typeof classifier.wordCount !== 'object' || Array.isArray(classifier.wordCount)) {
+		throw new TypeError(typeErrorMessage + ' Please check `classifier.wordCount`:' + classifier.wordCount);
+	}
 	newClassifier.wordCount = classifier.wordCount;
+
+	//As the library gets updated in the future, I will include a mechanism to upgrade the classifier and handle backward compatibility
+	if (classifier.VERSION !== NaiveBayesClassifier.VERSION) {
+		throw new Error('The classifier provided has a version number:' + classifier.VERSION + ' that is different to the library\'s current version number:' + NaiveBayesClassifier.VERSION);
+	}
 
 	return newClassifier;
 };
