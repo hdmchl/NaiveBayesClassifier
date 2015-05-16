@@ -11,6 +11,7 @@ var pkg = require('./package.json'),
 var path = {
 	scripts: 'src/*.js',
 	dist: 'dist/*.js',
+	test: 'test/NaiveBayesClassifier-test.js',
 	readme: 'README.md',
 	docs: './docs/NaiveBayesClassifier/' + pkg.version + '/**/*.*'
 };
@@ -31,7 +32,7 @@ gulp.task('build', function() {
 });
 
 gulp.task('test', function() {
-	gulp.src(path.dist)
+	gulp.src(path.test, {read: false})
 		.pipe(mocha({reporter: 'nyan'}));
 });
 

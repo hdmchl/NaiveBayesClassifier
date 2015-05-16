@@ -5,7 +5,7 @@
   "keywords": [ "naive", "bayes", "classifier", "multinomial", "machine learning", "learn", "categorize", "classify"],
   "main": "dist/NaiveBayesClassifier.min.js",
   "scripts": {
-    "test": "mocha -t 30000 -R spec"
+    "test": "gulp"
   },
   "repository": "https://github.com/hadimichael/NaiveBayesClassifier",
   "author": "@hadi_michael",
