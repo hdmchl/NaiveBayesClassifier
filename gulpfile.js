@@ -32,12 +32,13 @@ gulp.task('build', function() {
 });
 
 gulp.task('test', function() {
+	gulp.start('build');
 	gulp.src(path.test, {read: false})
 		.pipe(mocha({reporter: 'nyan'}));
 });
 
 gulp.task('default', function() {
-	gulp.run('build', 'test', 'docs');
+	gulp.start('build', 'test', 'docs');
 });
 
 gulp.task('deploy', function() {
@@ -45,7 +46,7 @@ gulp.task('deploy', function() {
 		.pipe(ghPages());
 });
 
-// Build and generate docs, every time we update the code
+// Build, test and generate docs, every time we update the code
 gulp.task('watch', function() {
   gulp.watch(path.scripts, ['default']);
   gulp.watch(path.readme, ['docs']);

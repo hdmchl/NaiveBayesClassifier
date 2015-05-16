@@ -1,3 +1,5 @@
+[![Build Status](https://img.shields.io/travis/hadimichael/NaiveBayesClassifier/master.svg?style=flat)](https://travis-ci.org/hadimichael/NaiveBayesClassifier)
+
 NaiveBayesClassifier is a Multinomial Naive-Bayes Classifier that uses Laplace Smoothing.
 
 It is based on the OpenCoursesOnline Stanford NLP video series by Professor Dan Jurafsky & Chris Manning, found here: https://www.youtube.com/watch?v=c3fnHA6yLeY.
