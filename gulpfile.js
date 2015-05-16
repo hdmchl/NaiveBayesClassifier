@@ -5,12 +5,14 @@ var pkg = require('./package.json'),
 	umd = require('gulp-umd'),
 	minify = require('gulp-minify'),
 	jshint = require('gulp-jshint'),
-	mocha = require('gulp-mocha');
+	mocha = require('gulp-mocha'),
+	ghPages = require('gulp-gh-pages');
 
 var path = {
 	scripts: 'src/*.js',
 	dist: 'dist/*.js',
-	readme: 'README.md'
+	readme: 'README.md',
+	docs: './docs/NaiveBayesClassifier/0.1.0/**/*.*'
 };
 
 require('gulp-grunt')(gulp); // Require all grunt tasks, we need this because grunt-jsdoc is better than the gulp alternative
@@ -35,6 +37,11 @@ gulp.task('test', function() {
 
 gulp.task('default', function() {
 	gulp.run('build', 'test', 'docs');
+});
+
+gulp.task('deploy', function() {
+	gulp.src(path.docs)
+		.pipe(ghPages());
 });
 
 // Build and generate docs, every time we update the code
