@@ -12,7 +12,7 @@ var path = {
 	scripts: 'src/*.js',
 	dist: 'dist/*.js',
 	readme: 'README.md',
-	docs: './docs/NaiveBayesClassifier/0.1.0/**/*.*'
+	docs: './docs/NaiveBayesClassifier/' + pkg.version + '/**/*.*'
 };
 
 require('gulp-grunt')(gulp); // Require all grunt tasks, we need this because grunt-jsdoc is better than the gulp alternative
