@@ -10,8 +10,10 @@
   "author": "@hadi_michael",
   "license": "BSD-3-Clause, see LICENSE file",
   "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-jsdoc": "^0.5.8",
     "gulp": "^3.8.11",
-    "gulp-documentation": "^1.0.1",
+    "gulp-grunt": "^0.5.2",
     "gulp-jshint": "^1.10.0",
     "gulp-minify": "0.0.5",
     "gulp-umd": "^0.1.3"
