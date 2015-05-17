@@ -33,7 +33,7 @@ gulp.task('build', function() {
 
 gulp.task('test', function() {
 	gulp.start('build');
-	gulp.src(path.test, {read: false})
+	gulp.src(path.test)
 		.pipe(mocha({reporter: 'nyan'}));
 });
 
@@ -42,8 +42,11 @@ gulp.task('default', function() {
 });
 
 gulp.task('deploy', function() {
-	gulp.src(path.docs)
-		.pipe(ghPages());
+	return gulp.src(path.docs)
+		.pipe(ghPages({
+			force: true,
+			cacheDir: '.deploy'
+		}));
 });
 
 // Build, test and generate docs, every time we update the code
