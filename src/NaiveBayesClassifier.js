@@ -181,8 +181,11 @@ NaiveBayesClassifier.withClassifier = function(classifier) {
 	newClassifier.wordCount = classifier.wordCount;
 
 	//As the library gets updated in the future, I will include a mechanism to upgrade the classifier and handle backward compatibility
-	if (classifier.VERSION !== NaiveBayesClassifier.VERSION) {
-		throw new Error('The classifier provided has a version number:' + classifier.VERSION + ' that is different to the library\'s current version number:' + NaiveBayesClassifier.VERSION);
+	// for the check, only look at major.minor and ignore .patch => do this by using parseFloat
+	if (typeof parseFloat(classifier.VERSION) !== 'number' ||
+		typeof parseFloat(NaiveBayesClassifier.VERSION) !== 'number' ||
+		parseFloat(classifier.VERSION) !== parseFloat(NaiveBayesClassifier.VERSION)) {
+		throw new Error('The classifier provided has a (major.minor) version number:' + classifier.VERSION + ' that is different to the library\'s current version number:' + NaiveBayesClassifier.VERSION);
 	}
 
 	return newClassifier;

@@ -95,10 +95,13 @@ describe('classifier initialisation and recreation', function () {
   });
 
   it('should raise an Error if the version of the current library is different to the existing classifier\'s version', function() {
-    var classifer = new NaiveBayesClassifier();
-    classifer.VERSION = ''; //clear the version
+    var invalidVersionOptions = [ '', 1, {}, true, 'a', [], function(){} ];
 
-    assert.throws(function () { NaiveBayesClassifier.withClassifier(classifer); }, Error);
+    invalidVersionOptions.forEach(function (invalidOption) {
+      var classifer = new NaiveBayesClassifier();
+      classifer.VERSION = invalidOption;
+      assert.throws(function () { NaiveBayesClassifier.withClassifier(classifer); }, Error);
+    });
   });
 });
 
