@@ -38,14 +38,14 @@ var splitOnChar = function(text) {
 var classifier = new NaiveBayesClassifier({ tokenizer: splitOnChar });
 ```
 
-##`NaiveBayesClassifier.withClassifier(classifier)`
+##`.withClassifier(classifier)`
 Recover an existing `classifier`, which you may have retrieved from a database or localstorage:
 ```js
 var NaiveBayesClassifier = require('NaiveBayesClassifier'),
 	classifier = NaiveBayesClassifier.withClassifier(existingClassifier);
 ```
 
-##`classifier.learn(text, category)`
+##`.learn(text, category)`
 Teach your classifier what `category` the `text` belongs to. The more you teach your classifier, the more reliable it becomes. It will use what it has learned to identify new documents that it hasn't seen before.
 
 ```js
@@ -54,12 +54,12 @@ classifier.learn('terrible, shitty thing. Damn. Sucks!!', 'negative');
 classifier.learn('I dont really know what to make of this.', 'neutral');
 ```
 
-##`classifier.categorize(text)`
+##`.categorize(text)`
 ```js
 classifier.categorize('awesome, cool, amazing!! Yay.');
 ```
 
-This will return the most likely `category` it thinks `text` belongs to and its `probability`. Its judgement is based on what you have taught it with `.learn()`.
+This will return the most likely `category` it thinks `text` belongs to and its `probability`. Its judgement is based on what you have taught it with `.learn(text, category)`.
 
 ```json
 { 
