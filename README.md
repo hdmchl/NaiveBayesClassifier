@@ -18,7 +18,7 @@ Depending on your specific attributes and sample size, there may be other algori
 #Installing NaiveBayesClassifier
 NaiveBayesClassifier is shipped in UMD format, meaning that it is available as a CommonJS/AMD module or browser global. You can install it using:
 ```bash
-$ npm install NaiveBayesClassifier
+$ npm install naivebayesclassifier
 ```
 
 #Basic Usage
