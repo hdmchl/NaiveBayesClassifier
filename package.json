@@ -1,5 +1,6 @@
 {
-  "name": "NaiveBayesClassifier",
+  "name": "naivebayesclassifier",
+  "title": "NaiveBayesClassifier",
   "version": "0.1.0",
   "description": "NaiveBayesClassifier is a Multinomial Naive-Bayes Classifier that uses Laplace Smoothing.",
   "keywords": [ "naive", "bayes", "classifier", "multinomial", "machine learning", "learn", "categorize", "classify"],
@@ -7,8 +8,14 @@
   "scripts": {
     "test": "gulp test"
   },
-  "repository": "https://github.com/hadimichael/NaiveBayesClassifier",
-  "author": "@hadi_michael",
+  "author": {
+    "name": "Hadi Michael",
+    "url": "http://hadi.io"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hadimichael/NaiveBayesClassifier.git"
+  },
   "license": "BSD-3-Clause, see LICENSE file",
   "devDependencies": {
     "grunt": "^0.4.5",
