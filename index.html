@@ -86,27 +86,41 @@
 <li>is a tweet expressing <strong>positive</strong> sentiment or <strong>negative</strong> sentiment?</li>
 </ul>
 <p>Depending on your specific attributes and sample size, there may be other algorithms that are better suited: <a href="http://www4.ncsu.edu/~arezaei2/paper/JCIT4-184028_Camera%20Ready.pdf">Comparison of Classification Methods Based on the Type of Attributes and Sample Size</a>.</p>
-<h1>Basic Usage</h1>
-<h2>Installing NaiveBayesClassifier</h2>
-<p>NaiveBayesClassifier is shipped in UMD format, meaning that it is available as a CommonJS/AMD module or browser global.</p>
-<p>You can install it using:</p>
+<h1>Installing NaiveBayesClassifier</h1>
+<p>NaiveBayesClassifier is shipped in UMD format, meaning that it is available as a CommonJS/AMD module or browser global. You can install it using:</p>
 <pre><code class="lang-bash">$ npm install NaiveBayesClassifier</code></pre>
-<h2>Create a new classifier: new NaiveBayesClassifier([options])</h2>
-<p>Create a brand new <code>classifier</code> using:</p>
+<h1>Basic Usage</h1>
+<h2><code>new NaiveBayesClassifier([options])</code></h2>
 <pre><code class="lang-js">var NaiveBayesClassifier = require('NaiveBayesClassifier'),
     classifier = new NaiveBayesClassifier();</code></pre>
-<h2>Recover an existing classifier: NaiveBayesClassifier.withClassifier(classifier)</h2>
+<p>Or with a custom tokenization function:</p>
+<pre><code class="lang-js">var NaiveBayesClassifier = require('NaiveBayesClassifier');
+var splitOnChar = function(text) { 
+    return text.split('');
+};
+var classifier = new NaiveBayesClassifier({ tokenizer: splitOnChar });</code></pre>
+<h2><code>.withClassifier(classifier)</code></h2>
 <p>Recover an existing <code>classifier</code>, which you may have retrieved from a database or localstorage:</p>
 <pre><code class="lang-js">var NaiveBayesClassifier = require('NaiveBayesClassifier'),
     classifier = NaiveBayesClassifier.withClassifier(existingClassifier);</code></pre>
-<h2>classifier.learn(text, category)</h2>
+<h2><code>.learn(text, category)</code></h2>
 <p>Teach your classifier what <code>category</code> the <code>text</code> belongs to. The more you teach your classifier, the more reliable it becomes. It will use what it has learned to identify new documents that it hasn't seen before.</p>
 <pre><code class="lang-js">classifier.learn('amazing, awesome movie!! Yeah!!', 'positive');
 classifier.learn('terrible, shitty thing. Damn. Sucks!!', 'negative');
 classifier.learn('I dont really know what to make of this.', 'neutral');</code></pre>
-<h2>classifier.categorize(text)</h2>
-<p>This will return the most likely <code>category</code> it thinks <code>text</code> belongs to and its <code>probability</code> of certainty. Its judgement is based on what you have taught it with <code>.learn()</code>.</p>
+<h2><code>.categorize(text)</code></h2>
 <pre><code class="lang-js">classifier.categorize('awesome, cool, amazing!! Yay.');</code></pre>
+<p>This will return the most likely <code>category</code> it thinks <code>text</code> belongs to and its <code>probability</code>. Its judgement is based on what you have taught it with <code>.learn(text, category)</code>.</p>
+<pre><code class="lang-json">{ 
+  &quot;category&quot;: &quot;positive&quot;,
+  &quot;probability&quot;: 0.768701215200234,
+  &quot;categories&quot;:
+   { 
+     &quot;positive&quot;: 0.768701215200234,
+     &quot;negative&quot;: 0.15669449587155276,
+     &quot;neutral&quot;: 0.07460428892821327
+   } 
+}</code></pre>
 <h2>Complete API Documentation</h2>
 <p>If you would like to explore the full API, you can find auto-generated documentation at: <a href="https://hadi.io/NaiveBayesClassifier"><a href="https://hadi.io/NaiveBayesClassifier">https://hadi.io/NaiveBayesClassifier</a></a>.</p>
 <h1>Acknowledgements</h1>
