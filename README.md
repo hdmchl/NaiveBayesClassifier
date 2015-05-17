@@ -18,28 +18,34 @@ Depending on your specific attributes and sample size, there may be other algori
 #Basic Usage
 
 ##Installing NaiveBayesClassifier
-NaiveBayesClassifier is shipped in UMD format, meaning that it is available as a CommonJS/AMD module or browser global.
-
-You can install it using:
+NaiveBayesClassifier is shipped in UMD format, meaning that it is available as a CommonJS/AMD module or browser global. You can install it using:
 ```bash
 $ npm install NaiveBayesClassifier
 ```
 
-##Create a new classifier: new NaiveBayesClassifier([options])
-Create a brand new `classifier` using:
+##`new NaiveBayesClassifier([options])`
 ```js
 var NaiveBayesClassifier = require('NaiveBayesClassifier'),
 	classifier = new NaiveBayesClassifier();
 ```
 
-##Recover an existing classifier: NaiveBayesClassifier.withClassifier(classifier)
+Or with a custom tokenization function:
+```js
+var NaiveBayesClassifier = require('NaiveBayesClassifier');
+var splitOnChar = function(text) { 
+	return text.split('');
+};
+var classifier = new NaiveBayesClassifier({ tokenizer: splitOnChar });
+```
+
+##`NaiveBayesClassifier.withClassifier(classifier)`
 Recover an existing `classifier`, which you may have retrieved from a database or localstorage:
 ```js
 var NaiveBayesClassifier = require('NaiveBayesClassifier'),
 	classifier = NaiveBayesClassifier.withClassifier(existingClassifier);
 ```
 
-##classifier.learn(text, category)
+##`classifier.learn(text, category)`
 Teach your classifier what `category` the `text` belongs to. The more you teach your classifier, the more reliable it becomes. It will use what it has learned to identify new documents that it hasn't seen before.
 
 ```js
@@ -48,10 +54,24 @@ classifier.learn('terrible, shitty thing. Damn. Sucks!!', 'negative');
 classifier.learn('I dont really know what to make of this.', 'neutral');
 ```
 
-##classifier.categorize(text)
-This will return the most likely `category` it thinks `text` belongs to and its `probability` of certainty. Its judgement is based on what you have taught it with `.learn()`.
+##`classifier.categorize(text)`
 ```js
 classifier.categorize('awesome, cool, amazing!! Yay.');
+```
+
+This will return the most likely `category` it thinks `text` belongs to and its `probability`. Its judgement is based on what you have taught it with `.learn()`.
+
+```json
+{ 
+  category: 'positive',
+  probability: 0.768701215200234,
+  categories:
+   { 
+     positive: 0.768701215200234,
+     negative: 0.15669449587155276,
+     neutral: 0.07460428892821327
+   } 
+}
 ```
 
 ## Complete API Documentation
