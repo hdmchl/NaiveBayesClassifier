@@ -15,13 +15,13 @@ You can use this implementation for categorizing any text content into any arbit
 
 Depending on your specific attributes and sample size, there may be other algorithms that are better suited: [Comparison of Classification Methods Based on the Type of Attributes and Sample Size](http://www4.ncsu.edu/~arezaei2/paper/JCIT4-184028_Camera%20Ready.pdf).
 
-#Basic Usage
-
-##Installing NaiveBayesClassifier
+#Installing NaiveBayesClassifier
 NaiveBayesClassifier is shipped in UMD format, meaning that it is available as a CommonJS/AMD module or browser global. You can install it using:
 ```bash
 $ npm install NaiveBayesClassifier
 ```
+
+#Basic Usage
 
 ##`new NaiveBayesClassifier([options])`
 ```js
@@ -63,13 +63,13 @@ This will return the most likely `category` it thinks `text` belongs to and its 
 
 ```json
 { 
-  category: 'positive',
-  probability: 0.768701215200234,
-  categories:
+  "category": "positive",
+  "probability": 0.768701215200234,
+  "categories":
    { 
-     positive: 0.768701215200234,
-     negative: 0.15669449587155276,
-     neutral: 0.07460428892821327
+     "positive": 0.768701215200234,
+     "negative": 0.15669449587155276,
+     "neutral": 0.07460428892821327
    } 
 }
 ```
