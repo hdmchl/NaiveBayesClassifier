@@ -1,7 +1,7 @@
 /* 
- * @name: NaiveBayesClassifier
+ * @title: NaiveBayesClassifier
  * @description: NaiveBayesClassifier is a Multinomial Naive-Bayes Classifier that uses Laplace Smoothing.
- * @version: 0.1.0
+ * @version: see static variable .VERSION
  * @author: Hadi Michael (http://hadi.io)
  * @repository: https://github.com/hadimichael/NaiveBayesClassifier
  * @license: BSD-3-Clause, see LICENSE file
@@ -122,7 +122,7 @@ var NaiveBayesClassifier = function(options) {
  * @constant
  * @property {String} - Library version number
  */
-NaiveBayesClassifier.VERSION = '0.1.0'; // current version | Note: JS Functions are first class Objects
+NaiveBayesClassifier.VERSION = '0.1.1'; // current version | Note: JS Functions are first class Objects
 
 /**
  * Initialise a new classifier from an existing NaiveBayesClassifier object. 
