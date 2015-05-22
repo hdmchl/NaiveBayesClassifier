@@ -17,23 +17,33 @@ Depending on your specific attributes and sample size, there may be other algori
 
 # Installing NaiveBayesClassifier
 
-NaiveBayesClassifier is shipped in UMD format, meaning that it is available as a CommonJS/AMD module or browser global. You can install it using:
+NaiveBayesClassifier is shipped in UMD format, meaning that it is available as a CommonJS/AMD module or browser global. You can install it using [`npm`](https://www.npmjs.com/):
 
 ```bash
 $ npm install naivebayesclassifier
 ```
 
+OR using [`bower`](http://bower.io/):
+
+```bash
+$ bower install naivebayesclassifier
+```
+
+# Try it now
+
+You can experiment, test and play with NaiveBayesClassifier in your browser at [http://jsbin.com/xixuga/1/edit?html,js,console](http://jsbin.com/xixuga/1/edit?html,js,console)
+
 # Basic Usage
 
 ## `new NaiveBayesClassifier([options])`
 
+Using the default tokenization function, which splits on spaces:
 ```js
 var NaiveBayesClassifier = require('NaiveBayesClassifier'),
 	classifier = new NaiveBayesClassifier();
 ```
 
-Or with a custom tokenization function:
-
+Or with an optional custom tokenization function that you specify:
 ```js
 var NaiveBayesClassifier = require('NaiveBayesClassifier');
 var splitOnChar = function(text) { 
