@@ -28,6 +28,6 @@
   "ignore": [
     "docs",
     "node_modules",
-    "test",
+    "test"
   ]
 }
