@@ -26,10 +26,8 @@
   ],
   "license": "BSD-3-Clause, see LICENSE file",
   "ignore": [
-    "**/.*",
+    "docs",
     "node_modules",
-    "bower_components",
     "test",
-    "tests"
   ]
 }
