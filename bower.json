@@ -29,6 +29,8 @@
   "license": "BSD-3-Clause, see LICENSE file",
   "ignore": [
     "/*",
-    "!/dist"
+    "!/dist",
+    "!LICENSE",
+    "!README.md"
   ]
 }
