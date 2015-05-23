@@ -15,6 +15,12 @@ You can use this implementation for categorizing any text content into any arbit
 
 Depending on your specific attributes and sample size, there may be other algorithms that are better suited: [Comparison of Classification Methods Based on the Type of Attributes and Sample Size](http://www4.ncsu.edu/~arezaei2/paper/JCIT4-184028_Camera%20Ready.pdf).
 
+# Try it now
+
+You can experiment, test and play with NaiveBayesClassifier in your browser at [http://jsbin.com/xixuga/1/edit?html,js,console](http://jsbin.com/xixuga/1/edit?html,js,console)
+
+If you would like to try NaiveBayesClassifier as a web-service, you can use: [http://nbcaas.herokuapp.com/](http://nbcaas.herokuapp.com/)
+
 # Installing NaiveBayesClassifier
 
 NaiveBayesClassifier is shipped in UMD format, meaning that it is available as a CommonJS/AMD module or browser global. You can install it using [`npm`](https://www.npmjs.com/):
@@ -28,10 +34,6 @@ OR using [`bower`](http://bower.io/):
 ```bash
 $ bower install naivebayesclassifier
 ```
-
-# Try it now
-
-You can experiment, test and play with NaiveBayesClassifier in your browser at [http://jsbin.com/xixuga/1/edit?html,js,console](http://jsbin.com/xixuga/1/edit?html,js,console)
 
 # Basic Usage
 
@@ -94,7 +96,7 @@ This will return the most likely `category` it thinks `text` belongs to and its 
 
 ## Complete API Documentation
 
-If you would like to explore the full API, you can find auto-generated documentation at: [https://hadi.io/NaiveBayesClassifier](https://hadi.io/NaiveBayesClassifier).
+If you would like to explore the full API, you can find auto-generated documentation at: [https://hadi.io/NaiveBayesClassifier](http://hadi.io/NaiveBayesClassifier/NaiveBayesClassifier.html).
 
 # Acknowledgements
 
