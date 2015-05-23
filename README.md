@@ -1,4 +1,4 @@
-[![Build Status](https://img.shields.io/travis/hadimichael/NaiveBayesClassifier/master.svg?style=flat)](https://travis-ci.org/hadimichael/NaiveBayesClassifier)
+[![Build Status](https://img.shields.io/travis/hadimichael/NaiveBayesClassifier/master.svg?style=flat)](https://travis-ci.org/hadimichael/NaiveBayesClassifier) [![Join the chat at https://gitter.im/hadimichael/NaiveBayesClassifier](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/hadimichael/NaiveBayesClassifier?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 NaiveBayesClassifier is an implementation of a [Multinomial Naive-Bayes Classifier](http://en.wikipedia.org/wiki/Naive_Bayes_classifier#Multinomial_naive_Bayes) that uses [Laplace Smoothing](http://en.wikipedia.org/wiki/Additive_smoothing). It takes in a piece of text and tells you which category it most likely belongs to.
 
