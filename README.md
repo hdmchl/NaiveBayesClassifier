@@ -4,6 +4,8 @@ NaiveBayesClassifier is an implementation of a [Multinomial Naive-Bayes Classifi
 
 ## What is this good for?
 
+[![Join the chat at https://gitter.im/hadimichael/NaiveBayesClassifier](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/hadimichael/NaiveBayesClassifier?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 "In machine learning, naive Bayes classifiers are a family of simple probabilistic classifiers based on applying Bayes' theorem with strong (naive) independence assumptions between the features." - [Wikipedia: Naive Bayes classifier](http://en.wikipedia.org/wiki/Naive_Bayes_classifier).
 
 You can use this implementation for categorizing any text content into any arbitrary set of categories. For example:
