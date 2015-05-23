@@ -17,13 +17,13 @@ Depending on your specific attributes and sample size, there may be other algori
 
 # Try it now
 
-You can experiment, test and play with NaiveBayesClassifier in your browser at [http://jsbin.com/xixuga/1/edit?html,js,console](http://jsbin.com/xixuga/1/edit?html,js,console)
+You can experiment, test and play with `NaiveBayesClassifier` in your browser at [http://jsbin.com/xixuga/1/edit?html,js,console](http://jsbin.com/xixuga/1/edit?html,js,console)
 
-If you would like to try NaiveBayesClassifier as a web-service, you can use: [http://nbcaas.herokuapp.com/](http://nbcaas.herokuapp.com/)
+If you would like to try `NaiveBayesClassifier` as a web-service, you can use: [http://nbcaas.herokuapp.com/](http://nbcaas.herokuapp.com/)
 
-# Installing NaiveBayesClassifier
+# Installing `NaiveBayesClassifier`
 
-NaiveBayesClassifier is shipped in UMD format, meaning that it is available as a CommonJS/AMD module or browser global. You can install it using [`npm`](https://www.npmjs.com/):
+`NaiveBayesClassifier` is shipped in UMD format, meaning that it is available as a CommonJS/AMD module or browser global. You can install it using [`npm`](https://www.npmjs.com/):
 
 ```bash
 $ npm install naivebayesclassifier
