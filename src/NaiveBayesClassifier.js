@@ -348,7 +348,7 @@ NaiveBayesClassifier.prototype.categorize = function (text) {
 		//take the log to avoid underflow with large datasets - http://www.johndcook.com/blog/2012/07/26/avoiding-underflow-in-bayesian-computations/
 		var logCategoryProbability = Math.log(categoryProbability); //start with P(Cj), we will add P(wi|Cj) incrementally below
 
-		// 2. Find probability of each word in this categogy
+		// 2. Find probability of each word in this category
 		//=> P(wi|Cj) = count(wi,cj) / SUM[(for w in v) count(w,cj)]
 		// =============================================================================
 
