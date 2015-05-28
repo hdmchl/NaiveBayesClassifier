@@ -360,7 +360,7 @@ NaiveBayesClassifier.prototype.categorize = function (text) {
 			//=> log( P(w|c) )
 			var tokenProbability = self.tokenProbability(token, category);
 			//and add it to our running probability that the text belongs to the current category
-			logCategoryProbability += Math.log(tokenProbability); //TODO: look into *frequencyTable[token];
+			logCategoryProbability += Math.log(tokenProbability) * tokenFrequencyTable[token];
 
 			// console.log('token: %s | category: `%s` | probability: %d', token, category, tokenProbability);
 		});
