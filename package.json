@@ -1,7 +1,7 @@
 {
   "name": "naivebayesclassifier",
   "title": "NaiveBayesClassifier",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "NaiveBayesClassifier is a Multinomial Naive-Bayes Classifier that uses Laplace Smoothing.",
   "keywords": [ "naive", "bayes", "classifier", "multinomial", "machine learning", "learn", "categorize", "classify"],
   "main": "dist/NaiveBayesClassifier-min.js",
