@@ -3,12 +3,9 @@
   "title": "NaiveBayesClassifier",
   "homepage": "https://github.com/hadimichael/NaiveBayesClassifier",
   "author": {
-    "name": "",
-    "url": ""
+    "name": "Hadi Michael",
+    "url": "http://hadi.io"
   },
-  "authors": [
-    { "name": "Hadi Michael", "homepage": "http://hadi.io" }
-  ],
   "description": "NaiveBayesClassifier is a Multinomial Naive-Bayes Classifier that uses Laplace Smoothing.",
   "main": "dist/NaiveBayesClassifier-min.js",
   "moduleType": [
