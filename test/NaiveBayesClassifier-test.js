@@ -156,7 +156,9 @@ describe('classifier correctness', function () {
     assert.equal(japaneseFrequencyCount.chinese, 1);
 
     //now test it to see that it correctly categorizes a new document
-    assert.equal(classifier.categorize('Chinese Chinese Japan Tokyo').category, 'japanese');
+    var classification = classifier.categorize('Chinese Chinese Chinese Japan Tokyo');
+    assert.equal(classification.category, 'chinese');
+    assert(Math.round(classification.probability*10000)/10000 === 0.6898, 'probability of chinese category (' + classification.probability + ') should be approximately 0.6898');
 
     done();
   });
