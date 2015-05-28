@@ -84,12 +84,12 @@ This will return the most likely `category` it thinks `text` belongs to and its 
 ```json
 { 
   "category": "positive",
-  "probability": 0.768701215200234,
+  "probability": 0.7687012152002337,
   "categories":
    { 
-     "positive": 0.768701215200234,
-     "negative": 0.15669449587155276,
-     "neutral": 0.07460428892821327
+     "positive": 0.7687012152002337,
+     "negative": 0.15669449587155299,
+     "neutral": 0.07460428892821332
    } 
 }
 ```
