@@ -131,7 +131,7 @@ var NaiveBayesClassifier = function(options) {
  * @constant
  * @property {String} - Library version number
  */
-NaiveBayesClassifier.VERSION = '0.1.1'; // current version | Note: JS Functions are first class Objects
+NaiveBayesClassifier.VERSION = '0.2.0'; // current version | Note: JS Functions are first class Objects
 
 /**
  * Initialise a new classifier from an existing NaiveBayesClassifier object. 
@@ -357,7 +357,7 @@ NaiveBayesClassifier.prototype.categorize = function (text) {
 		//take the log to avoid underflow with large datasets - http://www.johndcook.com/blog/2012/07/26/avoiding-underflow-in-bayesian-computations/
 		var logCategoryProbability = Math.log(categoryProbability); //start with P(Cj), we will add P(wi|Cj) incrementally below
 
-		// 2. Find probability of each word in this categogy
+		// 2. Find probability of each word in this category
 		//=> P(wi|Cj) = count(wi,cj) / SUM[(for w in v) count(w,cj)]
 		// =============================================================================
 
@@ -369,7 +369,7 @@ NaiveBayesClassifier.prototype.categorize = function (text) {
 			//=> log( P(w|c) )
 			var tokenProbability = self.tokenProbability(token, category);
 			//and add it to our running probability that the text belongs to the current category
-			logCategoryProbability += Math.log(tokenProbability); //TODO: look into *frequencyTable[token];
+			logCategoryProbability += Math.log(tokenProbability) * tokenFrequencyTable[token];
 
 			// console.log('token: %s | category: `%s` | probability: %d', token, category, tokenProbability);
 		});

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>NaiveBayesClassifier Index</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cosmo.css">
+
+</head>
+
+<body>
+<div class="container-fluid">
+	<div class="navbar navbar-fixed-top navbar-inverse">
+		<div class="navbar-inner">
+			<a class="brand" href="index.html">NaiveBayesClassifier</a>
+			<ul class="nav">
+				
+				<li class="dropdown">
+					<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu inline">
+						
+						<li>
+							<a href="NaiveBayesClassifier.html">NaiveBayesClassifier</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+			</ul>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+
+		
+		<div class="span8">
+			
+				<div id="main">
+					
+
+
+	
+	<span class="page-title">Index</span>
+	
+	
+
+
+
+    <h3>naivebayesclassifier 0.2.0</h3>
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+
+
+
+
+    <section class="readme-section">
+        <article><p><a href="https://travis-ci.org/hadimichael/NaiveBayesClassifier"><img src="https://img.shields.io/travis/hadimichael/NaiveBayesClassifier/master.svg?style=flat" alt="Build Status"></a> <a href="https://gitter.im/hadimichael/NaiveBayesClassifier?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the chat at https://gitter.im/hadimichael/NaiveBayesClassifier"></a></p>
+<p>NaiveBayesClassifier is an implementation of a <a href="http://en.wikipedia.org/wiki/Naive_Bayes_classifier#Multinomial_naive_Bayes">Multinomial Naive-Bayes Classifier</a> that uses <a href="http://en.wikipedia.org/wiki/Additive_smoothing">Laplace Smoothing</a>. It takes in a piece of text and tells you which category it most likely belongs to.</p>
+<h2>What is this good for?</h2>
+<p>&quot;In machine learning, naive Bayes classifiers are a family of simple probabilistic classifiers based on applying Bayes' theorem with strong (naive) independence assumptions between the features.&quot; - <a href="http://en.wikipedia.org/wiki/Naive_Bayes_classifier">Wikipedia: Naive Bayes classifier</a>.</p>
+<p>You can use this implementation for categorizing any text content into any arbitrary set of categories. For example:</p>
+<ul>
+<li>is an email <strong>spam</strong>, or <strong>not spam</strong>?</li>
+<li>is a news article about <strong>technology</strong>, <strong>politics</strong>, or <strong>sports</strong>?</li>
+<li>is the author of some piece of text <strong>male</strong>, or <strong>female</strong>?</li>
+<li>is a tweet expressing <strong>positive</strong> sentiment or <strong>negative</strong> sentiment?</li>
+</ul>
+<p>Depending on your specific attributes and sample size, there may be other algorithms that are better suited: <a href="http://www4.ncsu.edu/~arezaei2/paper/JCIT4-184028_Camera%20Ready.pdf">Comparison of Classification Methods Based on the Type of Attributes and Sample Size</a>.</p>
+<h1>Try it now</h1>
+<p>You can experiment, test and play with <code>NaiveBayesClassifier</code> in your browser at <a href="http://jsbin.com/xixuga/1/edit?html,js,console"><a href="http://jsbin.com/xixuga/1/edit?html,js,console">http://jsbin.com/xixuga/1/edit?html,js,console</a></a></p>
+<p>If you would like to try <code>NaiveBayesClassifier</code> as a web-service, you can use: <a href="http://nbcaas.herokuapp.com/"><a href="http://nbcaas.herokuapp.com/">http://nbcaas.herokuapp.com/</a></a></p>
+<h1>Installing <code>NaiveBayesClassifier</code></h1>
+<p><code>NaiveBayesClassifier</code> is shipped in UMD format, meaning that it is available as a CommonJS/AMD module or browser global. You can install it using <a href="https://www.npmjs.com/"><code>npm</code></a>:</p>
+<pre><code class="lang-bash">$ npm install naivebayesclassifier</code></pre>
+<p>OR using <a href="http://bower.io/"><code>bower</code></a>:</p>
+<pre><code class="lang-bash">$ bower install naivebayesclassifier</code></pre>
+<h1>Basic Usage</h1>
+<h2><code>new NaiveBayesClassifier([options])</code></h2>
+<p>Using the default tokenization function, which splits on spaces:</p>
+<pre><code class="lang-js">var NaiveBayesClassifier = require('NaiveBayesClassifier'),
+    classifier = new NaiveBayesClassifier();</code></pre>
+<p>Or with an optional custom tokenization function that you specify:</p>
+<pre><code class="lang-js">var NaiveBayesClassifier = require('NaiveBayesClassifier');
+var splitOnChar = function(text) { 
+    return text.split('');
+};
+var classifier = new NaiveBayesClassifier({ tokenizer: splitOnChar });</code></pre>
+<h2><code>.withClassifier(classifier)</code></h2>
+<p>Recover an existing <code>classifier</code>, which you may have retrieved from a database or localstorage:</p>
+<pre><code class="lang-js">var NaiveBayesClassifier = require('NaiveBayesClassifier'),
+    classifier = NaiveBayesClassifier.withClassifier(existingClassifier);</code></pre>
+<h2><code>.learn(text, category)</code></h2>
+<p>Teach your classifier what <code>category</code> the <code>text</code> belongs to. The more you teach your classifier, the more reliable it becomes. It will use what it has learned to identify new documents that it hasn't seen before.</p>
+<pre><code class="lang-js">classifier.learn('amazing, awesome movie!! Yeah!!', 'positive');
+classifier.learn('terrible, shitty thing. Damn. Sucks!!', 'negative');
+classifier.learn('I dont really know what to make of this.', 'neutral');</code></pre>
+<h2><code>.categorize(text)</code></h2>
+<pre><code class="lang-js">classifier.categorize('awesome, cool, amazing!! Yay.');</code></pre>
+<p>This will return the most likely <code>category</code> it thinks <code>text</code> belongs to and its <code>probability</code>. Its judgement is based on what you have taught it with <code>.learn(text, category)</code>.</p>
+<pre><code class="lang-json">{ 
+  &quot;category&quot;: &quot;positive&quot;,
+  &quot;probability&quot;: 0.768701215200234,
+  &quot;categories&quot;:
+   { 
+     &quot;positive&quot;: 0.768701215200234,
+     &quot;negative&quot;: 0.15669449587155276,
+     &quot;neutral&quot;: 0.07460428892821327
+   } 
+}</code></pre>
+<h2>Complete API Documentation</h2>
+<p>If you would like to explore the full API, you can find auto-generated documentation at: <a href="http://hadi.io/NaiveBayesClassifier/NaiveBayesClassifier.html"><a href="https://hadi.io/NaiveBayesClassifier">https://hadi.io/NaiveBayesClassifier</a></a>.</p>
+<h1>Acknowledgements</h1>
+<p>This implementation is based on the Stanford NLP <a href="https://www.youtube.com/watch?v=c3fnHA6yLeY">video series</a> by Professor Dan Jurafsky &amp; Chris Manning. This library modifies and extends work first investigated by <a href="https://twitter.com/tolga_tezel">Tolga Tezel</a>.</p>
+<h1>License</h1>
+<p>Copyright (C) 2015, Hadi Michael. All rights reserved.</p>
+<p>Licensed under <a href="LICENSE">BSD-3-Clause</a></p></article>
+    </section>
+
+
+
+
+
+
+
+				</div>
+
+				<div class="clearfix"></div>
+				<footer>
+					
+					
+		<span class="copyright">
+		Copyright (C) 2015, Hadi Michael. All rights reserved.
+		</span>
+					<br />
+					
+		<span class="jsdoc-message">
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a>
+		on Fri, May 29th, 2015 using the <a
+			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		</span>
+				</footer>
+			</div>
+
+			
+			<div class="span3">
+				<div id="toc"></div>
+			</div>
+			
+			<br clear="both">
+		</div>
+
+	</div>
+	<!--<script src="scripts/sunlight.js"></script>-->
+	<script src="scripts/docstrap.lib.js"></script>
+	<script src="scripts/bootstrap-dropdown.js"></script>
+	<script src="scripts/toc.js"></script>
+
+	<script>
+		$( function () {
+			$( "[id*='$']" ).each( function () {
+				var $this = $( this );
+
+				$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+			} );
+
+			$( "#toc" ).toc( {
+				anchorName  : function ( i, heading, prefix ) {
+					return $( heading ).attr( "id" ) || ( prefix + i );
+				},
+				selectors   : "h1,h2,h3,h4",
+				showAndHide : false,
+				scrollTo    : "100px"
+			} );
+
+			$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+			$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+			$( '.dropdown-toggle' ).dropdown();
+//			$( ".tutorial-section pre, .readme-section pre" ).addClass( "sunlight-highlight-javascript" ).addClass( "linenums" );
+
+			$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+				var $this = $( this );
+
+				var example = $this.find( "code" );
+				exampleText = example.html();
+				var lang = /{@lang (.*?)}/.exec( exampleText );
+				if ( lang && lang[1] ) {
+					exampleText = exampleText.replace( lang[0], "" );
+					example.html( exampleText );
+					lang = lang[1];
+				} else {
+					lang = "javascript";
+				}
+
+				if ( lang ) {
+
+					$this
+						.addClass( "sunlight-highlight-" + lang )
+						.addClass( "linenums" )
+						.html( example.html() );
+
+				}
+			} );
+
+			Sunlight.highlightAll( {
+				lineNumbers : true,
+				showMenu : true,
+				enableDoclinks : true
+			} );
+		} );
+	 </script>
+
+
+
+	<!--Navigation and Symbol Display-->
+	
+
+
+	<!--Google Analytics-->
+	
+
+</body>
+</html>
