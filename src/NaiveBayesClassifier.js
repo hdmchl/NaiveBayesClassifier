@@ -240,7 +240,7 @@ NaiveBayesClassifier.prototype.getOrCreateCategory = function(categoryName) {
 NaiveBayesClassifier.prototype.frequencyTable = function(tokens) {
 	var frequencyTable = {};
 
-	tokens.forEach(function (token) {
+	tokens.forEach(function updateFrequencyTableForToken(token) {
 		//we need to ensure our tokens are unique, to avoid clashing with existing object properties (e.g. 'constructor')
 		token = '_' + token;
 
@@ -276,7 +276,7 @@ NaiveBayesClassifier.prototype.learn = function(text, category) {
 	// =============================================================================
 	Object
 	.keys(tokenFrequencyTable)
-	.forEach(function(token) { //for each token in our tokenFrequencyTable
+	.forEach(function learnToken(token) { //for each token in our tokenFrequencyTable
 		
 		self.addWordToVocabulary(token); //add this word to our vocabulary if not already existing
 
