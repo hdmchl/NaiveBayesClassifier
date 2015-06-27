@@ -1,0 +1,41 @@
+{
+  "name": "naivebayesclassifier-profiler",
+  "version": "0.0.1",
+  "description": "Profiler for NaiveBayesClassifier to help with debugging and optimisation.",
+  "main": "profile.js",
+  "scripts": {
+    "uefa": "FETCH=uefa node fetch/wiki.js",
+    "afl": "FETCH=afl node fetch/wiki.js",
+    "nba": "FETCH=nba node fetch/wiki.js",
+    "f1": "FETCH=f1 node fetch/wiki.js",
+    "tennis": "FETCH=tennis node fetch/wiki.js",
+    "cricket": "FETCH=cricket node fetch/wiki.js",
+    "swimming": "FETCH=swimming node fetch/wiki.js",
+    "nrl": "FETCH=nrl node fetch/wiki.js",
+    "mlb": "FETCH=mlb node fetch/wiki.js",
+    "nhl": "FETCH=nhl node fetch/wiki.js",
+    "cycling": "FETCH=cycling node fetch/wiki.js",
+    "golf": "FETCH=golf node fetch/wiki.js",
+    "sport": "CONCAT=uefa,afl,nba,f1,tennis,cricket,swimming,nrl,mlb,nhl,cycling,golf CAT=sport node fetch/wiki.js",
+    "sport5": "CONCAT=swimming CAT=sport5 node fetch/wiki.js",
+    "sport10": "CONCAT=afl,swimming CAT=sport10 node fetch/wiki.js",
+    "sport20": "CONCAT=uefa,f1,swimming,golf CAT=sport20 node fetch/wiki.js",
+    "sport30": "CONCAT=uefa,afl,nba,f1,tennis,cricket,swimming,cycling CAT=sport30 node fetch/wiki.js"
+  },
+  "author": {
+    "name": "Hadi Michael",
+    "url": "http://hadi.io"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hadimichael/NaiveBayesClassifier.git"
+  },
+  "license": "BSD-3-Clause, see LICENSE file",
+  "devDependencies": {
+    "feedparser": "^1.1.3",
+    "htmlstrip-native": "^0.1.1",
+    "jsonfile": "^2.2.1",
+    "request": "^2.58.0",
+    "v8-profiler": "^5.2.9"
+  }
+}
