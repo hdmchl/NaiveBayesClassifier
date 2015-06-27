@@ -122,7 +122,7 @@ var NaiveBayesClassifier = function(options) {
  * @constant
  * @property {String} - Library version number
  */
-NaiveBayesClassifier.VERSION = '0.2.0'; // current version | Note: JS Functions are first class Objects
+NaiveBayesClassifier.VERSION = '0.3.0'; // current version | Note: JS Functions are first class Objects
 
 /**
  * Initialise a new classifier from an existing NaiveBayesClassifier object. 
