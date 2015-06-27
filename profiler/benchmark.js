@@ -13,17 +13,14 @@ var util = require('util'),
 	NaiveBayesClassifier = require('../dist/NaiveBayesClassifier'),
 	classifier = new NaiveBayesClassifier();
 
+// Configure directories
+//==============================================================
 var WORKING_FILE = __dirname + '/data/wiki/sport.txt';
 
 var now = new Date(),
-	year = now.getFullYear(),
-	month = (now.getMonth()+1) < 10 ? '0' + (now.getMonth()+1) : (now.getMonth()+1),
-	day = now.getDate(),
-	hours = now.getHours(),
-	minutes = now.getMinutes(),
-	seconds = now.getSeconds();
+	month = (now.getMonth()+1) < 10 ? '0' + (now.getMonth()+1) : (now.getMonth()+1);
 
-var SESSION_DIR = year + month + day + '-' + hours  + minutes  + seconds,
+var SESSION_DIR = now.getFullYear() + month + now.getDate() + '-' + now.getHours()  + now.getMinutes()  + now.getSeconds(),
 	MEASUREMENTS_DIR = __dirname + '/measurements/' + SESSION_DIR + '/';
 
 // Make sure that the folder we want to work in, exists
@@ -71,7 +68,7 @@ var saveHeapSnapshot = function(fileName) {
 	});
 };
 
-// Save cpu profile
+// Save CPU profile
 //==============================================================
 var saveCpuProfile = function(cpuProfile) {
 	// console.log(cpuProfile);
@@ -89,24 +86,36 @@ var saveCpuProfile = function(cpuProfile) {
 	});
 };
 
-// Load file from disk and test the classifier
+// This is where the magic happens! Load text and profile classifier
 //==============================================================
 fs.readFile(WORKING_FILE, 'UTF8', function(err, data) {
 	if (err) { throw err; }
 
+	/* LEARN */
 	console.log(util.inspect(process.memoryUsage()));
 	saveHeapSnapshot('heap_start.heapsnapshot');
 
-	console.time('learning');
+	console.time('learn');
 	profiler.startProfiling('cpu_profile');
 
 	classifier.learn(data, 'sport');
 	
 	var cpuProfile = profiler.stopProfiling('cpu_profile');
-	console.timeEnd('learning');
+	console.timeEnd('learn');
 
 	saveHeapSnapshot('heap_end.heapsnapshot');
 	console.log(util.inspect(process.memoryUsage()));
 
 	saveCpuProfile(cpuProfile);
+	/* /LEARN */
+
+	/* CATEGORIZE: placeholder */
+	// console.time('categorize');
+
+	// var category = classifier.categorize('Western Bulldogs hold off late charge by St Kilda');
+
+	// console.timeEnd('categorize');
+
+	// console.log(category);
+	/* /CATEGORIZE */
 });
