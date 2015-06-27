@@ -241,6 +241,9 @@ NaiveBayesClassifier.prototype.frequencyTable = function(tokens) {
 	var frequencyTable = {};
 
 	tokens.forEach(function (token) {
+		//we need to ensure our tokens are unique, to avoid clashing with existing object properties (e.g. 'constructor')
+		token = '_' + token;
+
 		if (!frequencyTable[token]) {
 			frequencyTable[token] = 1;
 		} else {

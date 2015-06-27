@@ -34,13 +34,13 @@ describe('new NaiveBayesClassifier()', function () {
     // check classifier's state is as expected
     assert.equal(classifier.totalNumberOfDocuments, 1);
     assert.equal(classifier.docFrequencyCount.happy, 1);
-    assert.deepEqual(classifier.vocabulary, { a: 1, b: 1, c: 1, d: 1 });
+    assert.deepEqual(classifier.vocabulary, { _a: 1, _b: 1, _c: 1, _d: 1 });
     assert.equal(classifier.vocabularySize, 4);
     assert.equal(classifier.wordCount.happy, 4);
-    assert.equal(classifier.wordFrequencyCount.happy.a, 1);
-    assert.equal(classifier.wordFrequencyCount.happy.b, 1);
-    assert.equal(classifier.wordFrequencyCount.happy.c, 1);
-    assert.equal(classifier.wordFrequencyCount.happy.d, 1);
+    assert.equal(classifier.wordFrequencyCount.happy._a, 1);
+    assert.equal(classifier.wordFrequencyCount.happy._b, 1);
+    assert.equal(classifier.wordFrequencyCount.happy._c, 1);
+    assert.equal(classifier.wordFrequencyCount.happy._d, 1);
     assert.deepEqual(classifier.categories, { happy: 1 });
   });
 });
@@ -143,17 +143,17 @@ describe('classifier correctness', function () {
     //make sure it learned the `chinese` category correctly
     var chineseFrequencyCount = classifier.wordFrequencyCount.chinese;
 
-    assert.equal(chineseFrequencyCount.chinese, 5);
-    assert.equal(chineseFrequencyCount.beijing, 1);
-    assert.equal(chineseFrequencyCount.shanghai, 1);
-    assert.equal(chineseFrequencyCount.macao, 1);
+    assert.equal(chineseFrequencyCount._chinese, 5);
+    assert.equal(chineseFrequencyCount._beijing, 1);
+    assert.equal(chineseFrequencyCount._shanghai, 1);
+    assert.equal(chineseFrequencyCount._macao, 1);
 
     //make sure it learned the `japanese` category correctly
     var japaneseFrequencyCount = classifier.wordFrequencyCount.japanese;
 
-    assert.equal(japaneseFrequencyCount.tokyo, 1);
-    assert.equal(japaneseFrequencyCount.japan, 1);
-    assert.equal(japaneseFrequencyCount.chinese, 1);
+    assert.equal(japaneseFrequencyCount._tokyo, 1);
+    assert.equal(japaneseFrequencyCount._japan, 1);
+    assert.equal(japaneseFrequencyCount._chinese, 1);
 
     //now test it to see that it correctly categorizes a new document
     var classification = classifier.categorize('Chinese Chinese Chinese Japan Tokyo');
