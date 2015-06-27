@@ -23,7 +23,8 @@ var now = new Date(),
 	minutes = now.getMinutes(),
 	seconds = now.getSeconds();
 
-var MEASUREMENTS_DIR = __dirname + '/measurements/' + year + month + day + '-' + hours  + minutes  + seconds + '/';
+var SESSION_DIR = year + month + day + '-' + hours  + minutes  + seconds,
+	MEASUREMENTS_DIR = __dirname + '/measurements/' + SESSION_DIR + '/';
 
 // Make sure that the folder we want to work in, exists
 //==============================================================
@@ -60,7 +61,11 @@ var saveHeapSnapshot = function(fileName) {
 			function iterator(data) {
 				buffer += data;
 			},function complete(){
-				fs.writeFileSync(MEASUREMENTS_DIR + fileName, buffer);
+				fs.writeFile(MEASUREMENTS_DIR + fileName, buffer, function (err) {
+					if (err) { throw err; }
+
+					console.log('Saved `' + fileName + '` in `' + SESSION_DIR + '`');
+				});
 			}
 		);
 	});
@@ -69,15 +74,17 @@ var saveHeapSnapshot = function(fileName) {
 // Save cpu profile
 //==============================================================
 var saveCpuProfile = function(cpuProfile) {
+	// console.log(cpuProfile);
+
 	ensureExists(MEASUREMENTS_DIR, '0744', function(err) {
 		if (err) { throw err; }
 
-		// console.log(cpuProfile);
+		var fileName = 'profile.cpuprofile';
 
-		jsonfile.writeFile(MEASUREMENTS_DIR + 'profile.cpuprofile', cpuProfile, function (err) {
+		jsonfile.writeFile(MEASUREMENTS_DIR + fileName, cpuProfile, function (err) {
 			if (err) { throw err; }
 
-			console.log('Saved profile!');
+			console.log('Saved `' + fileName + '` in `' + SESSION_DIR + '`');
 		});
 	});
 };
