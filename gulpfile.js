@@ -57,3 +57,7 @@ gulp.task('watch', function() {
   gulp.watch(path.readme, ['docs']);
   gulp.watch(path.test, ['test']);
 });
+
+gulp.task('watch-build', function() {
+  gulp.watch(path.scripts, ['build']);
+});
