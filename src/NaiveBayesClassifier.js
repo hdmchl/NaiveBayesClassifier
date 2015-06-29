@@ -262,15 +262,13 @@ NaiveBayesClassifier.prototype.frequencyTable = function(tokens) {
  * @return {Object} NaiveBayesClassifier
  */
 NaiveBayesClassifier.prototype.learn = function(text, category) {
-	var self = this; //get reference to instance
+	category = this.getOrCreateCategory(category); //get or create a category
 
-	category = self.getOrCreateCategory(category); //get or create a category
+	this.docFrequencyCount[category] += 1; //update our count of how many documents mapped to this category
+	this.totalNumberOfDocuments += 1; //update the total number of documents we have learned from
 
-	self.docFrequencyCount[category] += 1; //update our count of how many documents mapped to this category
-	self.totalNumberOfDocuments += 1; //update the total number of documents we have learned from
-
-	var tokens = self.tokenizer(text); //break up the text into tokens
-	var tokenFrequencyTable = self.frequencyTable(tokens); //get a frequency count for each token in the text
+	var tokens = this.tokenizer(text); //break up the text into tokens
+	var tokenFrequencyTable = this.frequencyTable(tokens); //get a frequency count for each token in the text
 
 	// Update our vocabulary and our word frequency counts for this category
 	// =============================================================================
@@ -278,21 +276,21 @@ NaiveBayesClassifier.prototype.learn = function(text, category) {
 	.keys(tokenFrequencyTable)
 	.forEach(function learnToken(token) { //for each token in our tokenFrequencyTable
 		
-		self.addWordToVocabulary(token); //add this word to our vocabulary if not already existing
+		this.addWordToVocabulary(token); //add this word to our vocabulary if not already existing
 
 		var frequencyOfTokenInText = tokenFrequencyTable[token]; //look it up once, for speed
 
 		//update the frequency information for this word in this category
-		if (!self.wordFrequencyCount[category][token]) {
-			self.wordFrequencyCount[category][token] = frequencyOfTokenInText; //set it for the first time
+		if (!this.wordFrequencyCount[category][token]) {
+			this.wordFrequencyCount[category][token] = frequencyOfTokenInText; //set it for the first time
 		} else {
-			self.wordFrequencyCount[category][token] += frequencyOfTokenInText; //add to what's already there in the count
+			this.wordFrequencyCount[category][token] += frequencyOfTokenInText; //add to what's already there in the count
 		}
 
-		self.wordCount[category] += frequencyOfTokenInText; //add to the count of all words we have seen mapped to this category
-	});
+		this.wordCount[category] += frequencyOfTokenInText; //add to the count of all words we have seen mapped to this category
+	}.bind(this));
 
-	return self;
+	return this;
 };
 
 /**
@@ -327,26 +325,25 @@ NaiveBayesClassifier.prototype.tokenProbability = function(token, category) {
  * @return {Object} categories - Hashmap of probabilities for each category 
  */
 NaiveBayesClassifier.prototype.categorize = function (text) {
-	var self = this,  //get reference to instance
-			maxProbability = -Infinity,
-			totalProbabilities = 0,
-			cMAP = {}, //category of “maximum a posteriori” => most likely category
-			categoryProbabilities = {}; //probabilities of all categories
+	var maxProbability = -Infinity,
+		totalProbabilities = 0,
+		cMAP = {}, //category of “maximum a posteriori” => most likely category
+		categoryProbabilities = {}; //probabilities of all categories
 
-	var tokens = self.tokenizer(text),
-		tokenFrequencyTable = self.frequencyTable(tokens);
+	var tokens = this.tokenizer(text),
+		tokenFrequencyTable = this.frequencyTable(tokens);
 
 	Object
-	.keys(self.categories)
+	.keys(this.categories)
 	.forEach(function(category) { //for each category, find the probability of the text belonging to it
-		if (!self.categories[category]) { return; } //ignore categories that have been switched off
+		if (!this.categories[category]) { return; } //ignore categories that have been switched off
 
 		// 1. Find overall probability of this category
 		//=> P(Cj) = docCount(C=cj) / Ndoc
 		// =============================================================================
 		
 		//Put of all documents we've ever looked at, how many were mapped to this category
-		var categoryProbability = self.docFrequencyCount[category] / self.totalNumberOfDocuments;
+		var categoryProbability = this.docFrequencyCount[category] / this.totalNumberOfDocuments;
 
 		//take the log to avoid underflow with large datasets - http://www.johndcook.com/blog/2012/07/26/avoiding-underflow-in-bayesian-computations/
 		var logCategoryProbability = Math.log(categoryProbability); //start with P(Cj), we will add P(wi|Cj) incrementally below
@@ -361,12 +358,12 @@ NaiveBayesClassifier.prototype.categorize = function (text) {
 
 			//determine the log of the probability of this token belonging to the current category
 			//=> log( P(w|c) )
-			var tokenProbability = self.tokenProbability(token, category);
+			var tokenProbability = this.tokenProbability(token, category);
 			//and add it to our running probability that the text belongs to the current category
 			logCategoryProbability += Math.log(tokenProbability) * tokenFrequencyTable[token];
 
 			// console.log('token: %s | category: `%s` | probability: %d', token, category, tokenProbability);
-		});
+		}.bind(this));
 
 		// 3. Find the most likely category, thus far...
 		// =============================================================================
@@ -383,7 +380,7 @@ NaiveBayesClassifier.prototype.categorize = function (text) {
 		}
 
 		categoryProbabilities[category] = categoryProbability;
-	});
+	}.bind(this));
 
 	//normalise (out of 1) the probabilities, so that they are easier to relate to
 	Object
