@@ -2,6 +2,7 @@
 
 var pkg = require('./package.json'),
 	gulp = require('gulp'),
+	concat = require('gulp-concat'),
 	umd = require('gulp-umd'),
 	minify = require('gulp-minify'),
 	jshint = require('gulp-jshint'),
@@ -26,6 +27,7 @@ gulp.task('build', function() {
 	gulp.src(path.scripts)
 		.pipe(jshint())
 		.pipe(jshint.reporter('default'))
+		.pipe(concat('NaiveBayesClassifier.js'))
 		.pipe(umd()) // Ship in 'regular module' UMD format: returnExports.js
 		.pipe(minify())
 		.pipe(gulp.dest('./dist/'));

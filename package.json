@@ -3,7 +3,16 @@
   "title": "NaiveBayesClassifier",
   "version": "0.3.0",
   "description": "NaiveBayesClassifier is a Multinomial Naive-Bayes Classifier that uses Laplace Smoothing.",
-  "keywords": [ "naive", "bayes", "classifier", "multinomial", "machine learning", "learn", "categorize", "classify"],
+  "keywords": [
+    "naive",
+    "bayes",
+    "classifier",
+    "multinomial",
+    "machine learning",
+    "learn",
+    "categorize",
+    "classify"
+  ],
   "main": "dist/NaiveBayesClassifier-min.js",
   "scripts": {
     "test": "gulp test"
@@ -16,11 +25,12 @@
     "type": "git",
     "url": "git://github.com/hadimichael/NaiveBayesClassifier.git"
   },
-  "license": "BSD-3-Clause, see LICENSE file",
+  "license": "BSD-3-Clause",
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-jsdoc": "^0.5.8",
     "gulp": "^3.8.11",
+    "gulp-concat": "^2.6.0",
     "gulp-gh-pages": "^0.5.1",
     "gulp-grunt": "^0.5.2",
     "gulp-jshint": "^1.10.0",
