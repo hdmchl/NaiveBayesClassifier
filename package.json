@@ -13,7 +13,7 @@
     "categorize",
     "classify"
   ],
-  "main": "dist/NaiveBayesClassifier-min.js",
+  "main": "dist/NaiveBayesClassifier.js",
   "scripts": {
     "test": "gulp test"
   },
