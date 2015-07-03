@@ -22,7 +22,8 @@ NaiveBayesClassifier.prototype.learn = function(text, category) {
 	Object
 	.keys(tokenFrequencyTable)
 	.forEach(function learnToken(token) { //for each token in our tokenFrequencyTable
-		
+		if (token === '_') { return; } //skip empty tokens
+
 		this.addWordToVocabulary(token); //add this word to our vocabulary if not already existing
 
 		var frequencyOfTokenInText = tokenFrequencyTable[token]; //look it up once, for speed
@@ -38,4 +39,17 @@ NaiveBayesClassifier.prototype.learn = function(text, category) {
 	}.bind(this));
 
 	return this;
+};
+
+NaiveBayesClassifier.prototype.createLearnStreamForCategory = function(category) {
+	return stream ? new stream.Writable({
+		decodeStrings: false,
+		write: function write(chunk, encoding, next) {
+			var text = chunk.toString('utf8');
+
+			this.learn(text, category);
+
+			next();
+		}.bind(this)
+	}) : null;
 };

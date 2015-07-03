@@ -28,7 +28,19 @@ gulp.task('build', function() {
 		.pipe(jshint())
 		.pipe(jshint.reporter('default'))
 		.pipe(concat('NaiveBayesClassifier.js'))
-		.pipe(umd()) // Ship in 'regular module' UMD format: returnExports.js
+		.pipe(umd({
+			dependencies: function() {
+				return [
+					{
+						name: 'stream',
+						amd: 'stream',
+						cjs: 'stream',
+						global: 'stream',
+						param: 'stream'
+					}
+				];
+			}
+		})) // Ship in 'regular module' UMD format: returnExports.js
 		.pipe(minify())
 		.pipe(gulp.dest('./dist/'));
 });
@@ -53,11 +65,12 @@ gulp.task('deploy', function() {
 
 // Build, test and generate docs, every time we update the code
 gulp.task('watch', function() {
-  gulp.watch(path.scripts, ['default']);
-  gulp.watch(path.readme, ['docs']);
-  gulp.watch(path.test, ['test']);
+	gulp.watch(path.scripts, ['default']);
+	gulp.watch(path.readme, ['docs']);
+	gulp.watch(path.test, ['test']);
 });
 
 gulp.task('watch-build', function() {
-  gulp.watch(path.scripts, ['build']);
+	gulp.start('build');
+	gulp.watch(path.scripts, ['build']);
 });

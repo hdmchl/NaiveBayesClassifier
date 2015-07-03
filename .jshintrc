@@ -21,6 +21,7 @@
     "define": true,
     "describe": true,
     "it": true,
-    "NaiveBayesClassifier": true
+    "NaiveBayesClassifier": true,
+    "stream": true
   }
 }
