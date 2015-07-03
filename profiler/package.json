@@ -4,6 +4,7 @@
   "description": "Profiler for NaiveBayesClassifier to help with debugging and optimisation.",
   "main": "profile.js",
   "scripts": {
+    "measure": "EXPORT=true node measure.js",
     "uefa": "FETCH=uefa node fetch/wiki.js",
     "afl": "FETCH=afl node fetch/wiki.js",
     "nba": "FETCH=nba node fetch/wiki.js",
