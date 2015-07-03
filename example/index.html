@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>NaiveBayesClassifier | Demo</title>
+	<script src="../dist/NaiveBayesClassifier-min.js"></script>
+	<script>
+		(function(){
+			'use strict';
+
+			//Initialise a classifier
+			var classifier = new NaiveBayesClassifier();
+
+			//teach it how to identify the `chinese` category
+			classifier.learn('Chinese Beijing Chinese', 'chinese');
+			classifier.learn('Chinese Chinese Shanghai', 'chinese');
+			classifier.learn('Chinese Macao', 'chinese');
+
+			//teach it how to identify the `japanese` category
+			classifier.learn('Tokyo Japan Chinese', 'japanese');
+
+			//Use the classifier to categorize
+			var result = classifier.categorize('Chinese Chinese Chinese Japan Tokyo');
+
+			console.log(result); //print result to console
+		})();
+	</script>
+</head>
+<body></body>
+</html>
