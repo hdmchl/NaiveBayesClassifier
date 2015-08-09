@@ -1,3 +1,15 @@
+# Filesystem defaults
+.DS_Store
+
+# Webstorm preferences
+.idea
+
+# Logs
+*.log
+
+# Dependency directory
+# https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
 node_modules
+
+# Deployment temp directory
 .deploy
-npm-debug.log

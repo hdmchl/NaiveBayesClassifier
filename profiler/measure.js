@@ -139,6 +139,7 @@ var learnFromStream = function learnFromStream() {
 	readableStream.setEncoding(encoding);
 
 	console.log(util.inspect(process.memoryUsage()));
+	console.log(window.performance.memory);
 	saveHeapSnapshot('stream_heap_start.heapsnapshot');
 
 	console.time('stream_learn');
@@ -165,6 +166,7 @@ var learnFromStream = function learnFromStream() {
 		console.timeEnd('stream_learn');
 
 		saveHeapSnapshot('stream_heap_end.heapsnapshot');
+		console.log(window.performance.memory);
 		console.log(util.inspect(process.memoryUsage()));
 		saveCpuProfile(cpuProfile);
 
@@ -174,5 +176,5 @@ var learnFromStream = function learnFromStream() {
 
 // Call benchmark functions, one at a time
 //==============================================================
-// learnFromStream();
-learnFromFile();
+learnFromStream();
+// learnFromFile();

@@ -1,125 +1,50 @@
-/* 
- * @title: NaiveBayesClassifier
- * @description: NaiveBayesClassifier is a Multinomial Naive-Bayes Classifier that uses Laplace Smoothing.
- * @version: see static variable .VERSION
- * @author: Hadi Michael (http://hadi.io)
- * @repository: https://github.com/hadimichael/NaiveBayesClassifier
- * @license: BSD-3-Clause, see LICENSE file
-*/
-
 'use strict';
 
-/**
- * The NaiveBayesClassifier object holds all the properties and methods used by the classifier.
- *
- * @property {String} VERSION - Library version number
- *
- * @constructor
- * @param  {Object} [options] - Options that can be used for intialisation
- * @param  {Function} options.tokenizer - Custom tokenization function
- * @return {Object} {@link NaiveBayesClassifier}
- */
-var NaiveBayesClassifier = function(options) {
-	/**
-	 * @constant
-	 * @property {String} - Instance version number
-	*/
-	this.VERSION = NaiveBayesClassifier.VERSION;
+import {default as learn} from './learn';
+import {default as categorize} from './categorize';
 
-	// DEFAULT TOKENIZER
-	// =============================================================================
-	/**
-	 * Given an input string, tokenize it into an array of word tokens.
-	 * This tokenizer adopts a naive "independant bag of words" assumption.
-	 * This is the default tokenization function used if the user does not provide one in {@link NaiveBayesClassifier#options}.
-	 *
-	 * @param  {String} text - Text to be tokenized
-	 * @return {Array} String tokens
-	 */
-	var defaultTokenizer = function(text) {
-		//remove punctuation from text (anything that isn't a word char or a space), and enforce lowercase
-		var rgxPunctuation = new RegExp(/[^\w\s]/g);
-		var sanitized = text.replace(rgxPunctuation, ' ').toLowerCase();
+import {default as defaultTokenizer} from './utils/defaultTokenizer';
 
-		return sanitized.split(/\s+/);
-	};
+export default class NaiveBayesClassifier {
+	constructor(options={}) {
+		this.learn = learn;
+		this.categorize = categorize;
 
-	// OPTIONS
-	// =============================================================================
-	/**
-	 * Options defined at intialisation
-	 * @type {Object}
-	 * @property {Function} tokenizer - Tokenization function (can be custom provided or default).
-	 */
-	this.options = {};
+		this.VERSION = NaiveBayesClassifier.VERSION;
 
-	if (!!options) {
-		if (typeof options !== 'object' || Array.isArray(options)) {
-			throw new TypeError('NaiveBayesClassifier got invalid `options`: `' + options + '`. Please pass in an object.');
-		}
-		this.options = options;
+		this.tokenizer = options.tokenizer || defaultTokenizer;
+		this.dataStore = options.dataStore || new NaiveBayesClassifier.DataStore();
 	}
 
-	this.tokenizer = this.options.tokenizer || defaultTokenizer;
-	
-	// VOCABULARY - initialise our vocabulary and its size
-	// =============================================================================
-	/**
-	 * Hashmap holding all words that have been learnt
-	 * @type {Object}
-	 */
-	this.vocabulary = {};
+	frequencyTable(tokens) {
+		var frequencyTable = {};
 
-	/**
-	 * A counter that holds the size of {@link NaiveBayesClassifier#vocabulary} hashmap
-	 * @type {Number}
-	 */
-	this.vocabularySize = 0;
+		tokens.forEach(function updateFrequencyTableForToken(token) {
+			//we need to ensure our tokens are unique, to avoid clashing with existing object properties (e.g. 'constructor')
+			token = '_' + token;
 
-	// CATEGORIES - initilise categories
-	// =============================================================================
-	/**
-	 * Hashmap holding all category names
-	 * @type {Object}
-	 */
-	this.categories = {};
+			if (!frequencyTable[token]) {
+				frequencyTable[token] = 1;
+			} else {
+				frequencyTable[token] += 1;
+			}
+		});
 
-	// PRIOR PROBABILITY: P(Cj) = docCount(C=cj) / Ndoc
-	// =============================================================================
+		return frequencyTable;
+	}
 
-	/**
-	 * Document frequency table for each of our categories.
-	 * For each category, how many documents were mapped to it.
-	 * @type {Object}
-	 */
-	this.docFrequencyCount = {}; //docCount(class)
+	tokenProbability(token, category) {
+		// Recall => P(wi|Cj) = count(wi,cj) / SUM[(for w in v) count(w,cj)]
+		// =============================================================================
 
-	/**
-	 * A counter that holds the total number of documents we have learnt from.
-	 * @type {Number}
-	 */
-	this.totalNumberOfDocuments = 0; //Ndoc => number of documents we have learned from
+		//how many times this word has occurred in documents mapped to this category
+		var tokenFrequencyCount = this.dataStore.getTokenFrequencyCount(category, token) || 0; //count(wi,cj)
 
-	// LIKELIHOOD: P(wi|Cj) = count(wi,cj) / SUM[(for w in v) count(w,cj)]
-	// =============================================================================
+		//what is the count of all words that have ever been mapped to this category
+		var tokenCount = this.dataStore.getTokenCount(category); //SUM[(for w in v) count(w,cj)
 
-	/**
-	 * Word frequency table for each of our categories.
-	 * For each category, how frequently did a given word appear.
-	 * @type {Object}
-	 */
-	this.wordFrequencyCount = {}; //count(wi,cj)
-
-	/**
-	 * Word count table for each of our categories
-	 * For each category, how many words in total were mapped to it.
-	 * @type {Object}
-	 */
-	this.wordCount = {}; //SUM[(for w in v) count(w,cj)
+		//use laplace Add-1 Smoothing equation
+		//=> ( P(wi|Cj) = count(wi,cj) + 1 ) / ( SUM[(for w in v) count(w,cj)] + |VocabSize| )
+		return ( tokenFrequencyCount + 1 ) / ( tokenCount + this.dataStore.getVocabularySize() );
+	}
 };
-
-/**
- * @constant
- * @property {String} - Library version number
- */
-NaiveBayesClassifier.VERSION = '0.3.0'; // current version | Note: JS Functions are first class Objects

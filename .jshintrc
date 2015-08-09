@@ -22,6 +22,7 @@
     "describe": true,
     "it": true,
     "NaiveBayesClassifier": true,
-    "stream": true
+    "stream": true,
+    "levelup": true
   }
 }
