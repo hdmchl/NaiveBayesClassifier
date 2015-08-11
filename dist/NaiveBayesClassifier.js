@@ -80,7 +80,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _datastoreDataStore2 = _interopRequireDefault(_datastoreDataStore);
 
-	_NaiveBayesClassifier2['default'].VERSION = __webpack_require__(8).version;
+	_NaiveBayesClassifier2['default'].VERSION = __webpack_require__(7).version;
 	_NaiveBayesClassifier2['default'].DataStore = _datastoreDataStore2['default'];
 
 	module.exports = _NaiveBayesClassifier2['default'];
@@ -124,39 +124,41 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			this.VERSION = NaiveBayesClassifier.VERSION;
 
+			// TODO: OPTIONS
+			// =============================================================================
 			this.tokenizer = options.tokenizer || _utilsDefaultTokenizer2['default'];
 			this.dataStore = options.dataStore || new NaiveBayesClassifier.DataStore();
 		}
 
+		// UTILITY FUNCTIONS to help with calculations
+		// =============================================================================
+
 		_createClass(NaiveBayesClassifier, [{
-			key: 'frequencyTable',
-			value: function frequencyTable(tokens) {
-				var frequencyTable = {};
+			key: 'generateFrequencyMapForTokens',
+			value: function generateFrequencyMapForTokens(tokens) {
+				var frequencyMap = new Map();
 
 				tokens.forEach(function updateFrequencyTableForToken(token) {
-					//we need to ensure our tokens are unique, to avoid clashing with existing object properties (e.g. 'constructor')
-					token = '_' + token;
+					if (!token) {
+						return;
+					} //skip empty tokens
 
-					if (!frequencyTable[token]) {
-						frequencyTable[token] = 1;
-					} else {
-						frequencyTable[token] += 1;
-					}
+					var value = (frequencyMap.get(token) || 0) + 1;
+					frequencyMap.set(token, value);
 				});
 
-				return frequencyTable;
+				return frequencyMap;
 			}
 		}, {
-			key: 'tokenProbability',
-			value: function tokenProbability(token, category) {
-				// Recall => P(wi|Cj) = count(wi,cj) / SUM[(for w in v) count(w,cj)]
-				// =============================================================================
+			key: 'tokenProbabilityInCategory',
+			value: function tokenProbabilityInCategory(token, category) {
+				//Recall => P(wi|Cj) = count(wi,cj) / SUM[(for w in v) count(w,cj)]
 
 				//how many times this word has occurred in documents mapped to this category
-				var tokenFrequencyCount = this.dataStore.getTokenFrequencyCount(category, token) || 0; //count(wi,cj)
+				var tokenFrequencyCount = this.dataStore.getTokenFrequencyForCategory(token, category); //count(wi,cj)
 
 				//what is the count of all words that have ever been mapped to this category
-				var tokenCount = this.dataStore.getTokenCount(category); //SUM[(for w in v) count(w,cj)
+				var tokenCount = this.dataStore.getNumberOfTokensForCategory(category); //SUM[(for w in v) count(w,cj)
 
 				//use laplace Add-1 Smoothing equation
 				//=> ( P(wi|Cj) = count(wi,cj) + 1 ) / ( SUM[(for w in v) count(w,cj)] + |VocabSize| )
@@ -177,10 +179,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Train our naive-bayes classifier by telling it what `category` some `text` corresponds to.
-	 *
-	 * @param  {String} text - Some text that should be learnt
-	 * @param  {String} category - The category to which the text provided belongs to
-	 * @return {Object} NaiveBayesClassifier
 	 */
 
 	'use strict';
@@ -188,45 +186,55 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, '__esModule', {
 		value: true
 	});
+
+	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+
 	exports['default'] = learn;
 
 	function learn(text, category) {
-		category = this.dataStore.getOrCreateCategory(category); //get or create a category
-
-		this.dataStore.incrementDocFrequencyCount(category); //update our count of how many documents mapped to this category
-		console.log(this.dataStore.getDocFrequencyCount(category));
-		this.dataStore.incrementTotalNumberOfDocuments(); //update the total number of documents we have learned from
+		//TODO: do we want to add1DocForCategory on EVERY learn? What about streams...
+		this.dataStore.add1DocForCategory(category); //update our count of how many documents mapped to this category
 
 		var tokens = this.tokenizer(text); //break up the text into tokens
-		var tokenFrequencyTable = this.frequencyTable(tokens); //get a frequency count for each token in the text
+		var tokenFrequencyMap = this.generateFrequencyMapForTokens(tokens); //get a frequency count for each token in the text
+
 		// Update our vocabulary and our word frequency counts for this category
 		// =============================================================================
-		Object.keys(tokenFrequencyTable).forEach((function learnToken(token) {
-			//for each token in our tokenFrequencyTable
-			if (token === '_') {
-				return;
-			} //skip empty tokens
+		var _iteratorNormalCompletion = true;
+		var _didIteratorError = false;
+		var _iteratorError = undefined;
 
-			this.dataStore.addWordToVocabulary(token); //add this word to our vocabulary if not already existing
+		try {
+			for (var _iterator = tokenFrequencyMap[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+				var _step$value = _slicedToArray(_step.value, 2);
 
-			var frequencyOfTokenInText = tokenFrequencyTable[token]; //look it up once, for speed
+				var token = _step$value[0];
+				var frequency = _step$value[1];
 
-			//update the frequency information for this word in this category
-			this.dataStore.incrementTokenFrequencyCount(category, token, frequencyOfTokenInText);
-			//if (!this.getTokenFrequencyCount(category, token)) {
-			//	; //set it for the first time
-			//} else {
-			//	this.wordFrequencyCount[category][token] += frequencyOfTokenInText; //add to what's already there in the count
-			//}
-
-			this.dataStore.incrementTokenCount(category, frequencyOfTokenInText); //add to the count of all words we have seen mapped to this category
-		}).bind(this));
-
-		return this;
+				//update the frequency information for this token in this category
+				// this will also add to the total count of tokens we have seen, that are mapped to this category
+				// and it will ensure that the token is in our vocabulary
+				this.dataStore.addAmountToTokenFrequencyForCategory(frequency, token, category);
+			}
+		} catch (err) {
+			_didIteratorError = true;
+			_iteratorError = err;
+		} finally {
+			try {
+				if (!_iteratorNormalCompletion && _iterator['return']) {
+					_iterator['return']();
+				}
+			} finally {
+				if (_didIteratorError) {
+					throw _iteratorError;
+				}
+			}
+		}
 	}
 
 	;
 
+	//TODO: enable streamed learning
 	//NaiveBayesClassifier.prototype.createLearnStreamForCategory = function(category) {
 	//	return stream ? new stream.Writable({
 	//		decodeStrings: false,
@@ -248,11 +256,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Determine the category some `text` most likely belongs to.
 	 * Use Laplace (add-1) smoothing to adjust for words that do not appear in our vocabulary (i.e. unknown words).
-	 *
-	 * @param  {String} text - Raw text that needs to be tokenized and categorised.
-	 * @return {String} category - Category of “maximum a posteriori” (i.e. most likely category), or 'unclassified'
-	 * @return {Number} probability - The probablity for the category specified
-	 * @return {Object} categories - Hashmap of probabilities for each category 
 	 */
 
 	'use strict';
@@ -260,11 +263,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, '__esModule', {
 		value: true
 	});
+
+	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+
 	exports['default'] = categorize;
 
 	function categorize(text) {
-		var _this = this;
-
 		var maxProbability = -Infinity,
 		    totalProbabilities = 0,
 		    cMAP = {},
@@ -272,7 +276,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		categoryProbabilities = {}; //probabilities of all categories
 
 		var tokens = this.tokenizer(text),
-		    tokenFrequencyTable = this.frequencyTable(tokens);
+		    tokenFrequencyMap = this.generateFrequencyMapForTokens(tokens);
 
 		var categories = this.dataStore.getCategories();
 
@@ -281,48 +285,59 @@ return /******/ (function(modules) { // webpackBootstrap
 		var _iteratorError = undefined;
 
 		try {
-			var _loop = function () {
+			for (var _iterator = categories[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 				var category = _step.value;
-
-				//Object
-				//.keys(this.categories)
-				//.forEach(function(category) { //for each category, find the probability of the text belonging to it
-				if (categories[category]) {
-					return {
-						v: undefined
-					};
-				} //ignore categories that have been switched off
-
+				//for each category, find the probability of the text belonging to it
 				// 1. Find overall probability of this category
 				//=> P(Cj) = docCount(C=cj) / Ndoc
 				// =============================================================================
 
 				//Put of all documents we've ever looked at, how many were mapped to this category
-				categoryProbability = _this.dataStore.getDocFrequencyCount(category) / _this.dataStore.getTotalNumberOfDocuments();
+				var categoryProbability = this.dataStore.getNumberOfDocsForCategory(category) / this.dataStore.getTotalNumberOfDocuments();
 
-				console.log('============', category, _this.dataStore.getDocFrequencyCount(category), _this.dataStore.getTotalNumberOfDocuments(), categoryProbability);
 				//take the log to avoid underflow with large datasets - http://www.johndcook.com/blog/2012/07/26/avoiding-underflow-in-bayesian-computations/
-				logCategoryProbability = Math.log(categoryProbability);
-				//start with P(Cj), we will add P(wi|Cj) incrementally below
+				var logCategoryProbability = Math.log(categoryProbability); //start with P(Cj), we will add P(wi|Cj) incrementally below
 
 				// 2. Find probability of each word in this category
 				//=> P(wi|Cj) = count(wi,cj) / SUM[(for w in v) count(w,cj)]
 				// =============================================================================
 
-				Object.keys(tokenFrequencyTable).forEach((function (token) {
-					//for each token in our token frequency table
+				var _iteratorNormalCompletion2 = true;
+				var _didIteratorError2 = false;
+				var _iteratorError2 = undefined;
 
-					//determine the log of the probability of this token belonging to the current category
-					//=> log( P(w|c) )
-					var tokenProbability = this.tokenProbability(token, category);
-					//and add it to our running probability that the text belongs to the current category
-					logCategoryProbability += Math.log(tokenProbability) * tokenFrequencyTable[token];
+				try {
+					for (var _iterator2 = tokenFrequencyMap[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+						var _step2$value = _slicedToArray(_step2.value, 2);
 
-					console.log('token: %s | category: `%s` | probability: %d', token, category, tokenProbability);
-				}).bind(_this));
+						var token = _step2$value[0];
+						var frequency = _step2$value[1];
 
-				// 3. Find the most likely category, thus far...
-				// =============================================================================
+						//determine the log of the probability of this token belonging to the current category
+						var tokenProbability = this.tokenProbabilityInCategory(token, category); //=> log( P(w|c) )
+
+						//and add it to our running probability that the text belongs to the current category
+						logCategoryProbability += Math.log(tokenProbability) * frequency;
+
+						//console.log('token: %s | category: `%s` | probability: %d', token, category, tokenProbability);
+					}
+
+					// 3. Find the most likely category, thus far...
+					// =============================================================================
+				} catch (err) {
+					_didIteratorError2 = true;
+					_iteratorError2 = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+							_iterator2['return']();
+						}
+					} finally {
+						if (_didIteratorError2) {
+							throw _iteratorError2;
+						}
+					}
+				}
 
 				categoryProbability = Math.exp(logCategoryProbability); //reverse the log and get an actual value
 				totalProbabilities += categoryProbability; //calculate totals as we go, we'll use this to normalise later
@@ -337,15 +352,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				categoryProbabilities[category] = categoryProbability;
-			};
-
-			for (var _iterator = categories[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-				var categoryProbability;
-				var logCategoryProbability;
-
-				var _ret = _loop();
-
-				if (typeof _ret === 'object') return _ret.v;
 			} //.bind(this));
 
 			//normalise (out of 1) the probabilities, so that they are easier to relate to
@@ -402,7 +408,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	'use strict';
 
@@ -412,251 +418,143 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var _AbstractDataStore2 = __webpack_require__(7);
-
-	var _AbstractDataStore3 = _interopRequireDefault(_AbstractDataStore2);
 
 	var vocabulary = Symbol('vocabulary'),
 	    categories = Symbol('categories'),
-	    docFrequencyCount = Symbol('docFrequencyCount'),
+	    //use the word `categories` instead of `classes`, because `class` is a reserved keyword
+	numberOfDocsPerCategory = Symbol('numberOfDocsPerCategory'),
 	    totalNumberOfDocuments = Symbol('totalNumberOfDocuments'),
-	    tokenFrequencyCount = Symbol('tokenFrequencyCount'),
-	    tokenCount = Symbol('tokenCount');
+	    tokenFrequencyPerCategory = Symbol('tokenFrequencyPerCategory'),
+	    numberOfTokensPerCategory = Symbol('numberOfTokensPerCategory');
 
-	var DataStore = (function (_AbstractDataStore) {
-		_inherits(DataStore, _AbstractDataStore);
+	var getCategoryWithName = Symbol('getCategoryWithName');
 
+	var DataStore = (function () {
 		function DataStore() {
 			_classCallCheck(this, DataStore);
 
-			_get(Object.getPrototypeOf(DataStore.prototype), 'constructor', this).call(this);
-
-			// VOCABULARY
+			// ITERATORS
 			// =============================================================================
-			this[vocabulary] = new Set(); //Set holding all words that have been learnt
-
-			// CATEGORIES
-			// =============================================================================
-			this[categories] = new Set(); //Set holding all category names
+			this[vocabulary] = new Set(); //Set, holding all tokens that have been learnt
+			this[categories] = new Set(); //Set, holding all category names
 
 			// PRIOR PROBABILITY: P(Cj) = docCount(C=cj) / Ndoc
 			// =============================================================================
-
-			/**
-	   * Document frequency table for each of our categories.
-	   * For each category, how many documents were mapped to it.
-	   */
-			this[docFrequencyCount] = {}; //docCount(class) => how many documents exist for `class`
-
-			/**
-	   * A counter that holds the total number of documents we have learnt from.
-	   */
-			this[totalNumberOfDocuments] = 0; //Ndoc => number of documents we have learned from
+			this[numberOfDocsPerCategory] = {}; //docCount(class) => for each class, how many documents are mapped to it
+			this[totalNumberOfDocuments] = 0; //Ndoc => total number of documents that we have learned from
 
 			// LIKELIHOOD: P(wi|Cj) = count(wi,cj) / SUM[(for w in v)] count(w,cj)
 			// =============================================================================
+			this[tokenFrequencyPerCategory] = {}; //count(wi,cj) => for each class, how frequently did a given token appear.
+			this[numberOfTokensPerCategory] = {}; //SUM[(for w in v)] count(w,cj) => for each class, how many unique tokens in total were mapped to it.
 
-			/**
-	   * Word frequency table for each of our categories.
-	   * For each category, how frequently did a given word appear.
-	   */
-			this[tokenFrequencyCount] = {}; //count(wi,cj)
+			// PRIVATE utility functions
+			// =============================================================================
+			this[getCategoryWithName] = function (categoryName) {
+				if (!categoryName) {
+					throw Error('category name cannot be `undefined`');
+				}
 
-			/**
-	   * Word count table for each of our categories
-	   * For each category, how many words in total were mapped to it.
-	   */
-			this[tokenCount] = {}; //SUM[(for w in v)] count(w,cj) => sum of the times each word exists in a category
-		}
+				categoryName = categoryName.toString();
 
-		//"vocabulary": { //Set
-		//	"chinese": true,
-		//	"beijing": true,
-		//	"shanghai": true,
-		//	"macao": true,
-		//	"tokyo": true,
-		//	"japan": true
-		//},
-		//"vocabularySize": 6, //Not needed... we can call Set.size()
-		//"categories": { //Set
-		//	"chinese": true,
-		//	"japanese": true
-		//},
-		//"docFrequencyCount": { //POJO
-		//	"chinese": 3,
-		//	"japanese": 1
-		//},
-		//"totalNumberOfDocuments": 4, //POJO
-		//"tokenFrequencyCount": { //POJO
-		//	"chinese": {
-		//		"chinese": 5,
-		//		"beijing": 1,
-		//		"shanghai": 1,
-		//		"macao": 1
-		//	},
-		//	"japanese": {
-		//		"tokyo": 1,
-		//		"japan": 1,
-		//		"chinese": 1
-		//	}
-		//},
-		//"tokenCount": { //POJO
-		//	"chinese": 8,
-		//	"japanese": 3
-		//}
-
-		_createClass(DataStore, [{
-			key: 'addWordToVocabulary',
-			value: function addWordToVocabulary(word) {
-				this[vocabulary].add(word);
-			}
-		}, {
-			key: 'getVocabularySize',
-			value: function getVocabularySize() {
-				return this[vocabulary].size;
-			}
-		}, {
-			key: 'getCategories',
-			value: function getCategories() {
-				return this[categories];
-			}
-		}, {
-			key: 'getOrCreateCategory',
-			value: function getOrCreateCategory(categoryName) {
 				if (!this[categories].has(categoryName)) {
-					//setup counters
-					this[docFrequencyCount][categoryName] = 0;
-					this[tokenFrequencyCount][categoryName] = {};
-					this[tokenCount][categoryName] = 0;
-
 					//add new category to our list
 					this[categories].add(categoryName);
+
+					//setup counters
+					this[numberOfDocsPerCategory][categoryName] = 0;
+					this[tokenFrequencyPerCategory][categoryName] = {};
+					this[numberOfTokensPerCategory][categoryName] = 0;
 				}
 
 				return this[categories].has(categoryName) ? categoryName : undefined;
+			};
+		}
+
+		// VOCABULARY
+		// =============================================================================
+
+		_createClass(DataStore, [{
+			key: 'getVocabularySize',
+			value: function getVocabularySize() {
+				//used to calculate token probability
+				return this[vocabulary].size;
+			}
+
+			// CATEGORIES
+			// =============================================================================
+		}, {
+			key: 'getCategories',
+			value: function getCategories() {
+				//used for iterating
+				return this[categories];
+			}
+
+			// DOCUMENTS
+			// =============================================================================
+		}, {
+			key: 'add1DocForCategory',
+			value: function add1DocForCategory(categoryName) {
+				//used in learning
+				this[totalNumberOfDocuments] += 1; //increment the total number of documents we have learned from
+				return this[numberOfDocsPerCategory][this[getCategoryWithName](categoryName)] += 1;
 			}
 		}, {
-			key: 'getDocFrequencyCount',
-			value: function getDocFrequencyCount(categoryName) {
-				return this[docFrequencyCount][categoryName];
-			}
-		}, {
-			key: 'incrementDocFrequencyCount',
-			value: function incrementDocFrequencyCount(categoryName) {
-				this[docFrequencyCount][categoryName] = this[docFrequencyCount][categoryName] || 0;
-				return this[docFrequencyCount][categoryName] += 1;
-			}
-		}, {
-			key: 'getTokenFrequencyCount',
-			value: function getTokenFrequencyCount(categoryName, token) {
-				return this[tokenFrequencyCount][categoryName] ? this[tokenFrequencyCount][categoryName][token] : undefined;
-			}
-		}, {
-			key: 'incrementTokenFrequencyCount',
-			value: function incrementTokenFrequencyCount(categoryName, token, amount) {
-				if (this[tokenFrequencyCount][categoryName]) {
-					this[tokenFrequencyCount][categoryName][token] = this[tokenFrequencyCount][categoryName][token] || 0;
-					this[tokenFrequencyCount][categoryName][token] += amount;
-				}
-			}
-		}, {
-			key: 'getTokenCount',
-			value: function getTokenCount(categoryName) {
-				return this[tokenCount][categoryName];
-			}
-		}, {
-			key: 'incrementTokenCount',
-			value: function incrementTokenCount(categoryName, amount) {
-				this[tokenCount][categoryName] = this[tokenCount][categoryName] || 0;
-				this[tokenCount][categoryName] += amount;
+			key: 'getNumberOfDocsForCategory',
+			value: function getNumberOfDocsForCategory(categoryName) {
+				//used to calculate category probability
+				return this[numberOfDocsPerCategory][this[getCategoryWithName](categoryName)];
 			}
 		}, {
 			key: 'getTotalNumberOfDocuments',
 			value: function getTotalNumberOfDocuments() {
+				//used to calculate category probability
 				return this[totalNumberOfDocuments];
 			}
+
+			// TOKEN COUNT
+			// =============================================================================
 		}, {
-			key: 'incrementTotalNumberOfDocuments',
-			value: function incrementTotalNumberOfDocuments() {
-				return this[totalNumberOfDocuments] += 1;
+			key: 'getNumberOfTokensForCategory',
+			value: function getNumberOfTokensForCategory(categoryName) {
+				//used to calculate token probability
+				return this[numberOfTokensPerCategory][this[getCategoryWithName](categoryName)];
+			}
+
+			// TOKEN FREQUENCY
+			// =============================================================================
+		}, {
+			key: 'getTokenFrequencyForCategory',
+			value: function getTokenFrequencyForCategory(token, categoryName) {
+				//used to calculate token probability
+				token = token.toString();
+
+				this[tokenFrequencyPerCategory][this[getCategoryWithName](categoryName)][token] = this[tokenFrequencyPerCategory][categoryName][token] || 0;
+				return this[tokenFrequencyPerCategory][categoryName][token];
+			}
+		}, {
+			key: 'addAmountToTokenFrequencyForCategory',
+			value: function addAmountToTokenFrequencyForCategory(amount, token, categoryName) {
+				//used in learning
+				token = token.toString();
+
+				this[vocabulary].add(token); //make sure token is captured in our vocabulary
+				this.getTokenFrequencyForCategory(token, categoryName); //ensures sanitation and initialisation
+
+				this[tokenFrequencyPerCategory][this[getCategoryWithName](categoryName)][token] += amount;
+				this[numberOfTokensPerCategory][this[getCategoryWithName](categoryName)] += amount;
 			}
 		}]);
 
 		return DataStore;
-	})(_AbstractDataStore3['default']);
+	})();
 
 	exports['default'] = DataStore;
 	module.exports = exports['default'];
 
 /***/ },
 /* 7 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var AbstractDataStore = function AbstractDataStore() {
-		_classCallCheck(this, AbstractDataStore);
-
-		if (this.constructor.name === 'AbstractDataStore') {
-			throw new TypeError('Cannot construct `AbstractDataStore` instance directly');
-		}
-
-		if (!this.addWordToVocabulary) {
-			throw new Error('DataStore must override `addWordToVocabulary` method');
-		}
-
-		if (!this.getVocabularySize) {
-			throw new Error('DataStore must override `getVocabularySize` method');
-		}
-
-		if (!this.getOrCreateCategory) {
-			throw new Error('DataStore must override `getOrCreateCategory` method');
-		}
-
-		if (!this.getDocFrequencyCount) {
-			throw new Error('DataStore must override `getDocFrequencyCount` method');
-		}
-
-		if (!this.incrementDocFrequencyCount) {
-			throw new Error('DataStore must override `incrementDocFrequencyCount` method');
-		}
-
-		if (!this.getTokenFrequencyCount) {
-			throw new Error('DataStore must override `getTokenFrequencyCount` method');
-		}
-
-		if (!this.incrementTokenFrequencyCount) {
-			throw new Error('DataStore must override `incrementTokenFrequencyCount` method');
-		}
-
-		if (!this.getTokenCount) {
-			throw new Error('DataStore must override `getTokenCount` method');
-		}
-
-		if (!this.incrementTotalNumberOfDocuments) {
-			throw new Error('DataStore must override `incrementTotalNumberOfDocuments` method');
-		}
-	};
-
-	exports['default'] = AbstractDataStore;
-	module.exports = exports['default'];
-
-/***/ },
-/* 8 */
 /***/ function(module, exports) {
 
 	module.exports = {

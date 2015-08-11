@@ -1,152 +1,101 @@
 'use strict';
 
-import {default as AbstractDataStore} from './AbstractDataStore';
-
 var vocabulary = Symbol('vocabulary'),
-	categories = Symbol('categories'),
-	docFrequencyCount = Symbol('docFrequencyCount'),
+	categories = Symbol('categories'), //use the word `categories` instead of `classes`, because `class` is a reserved keyword
+	numberOfDocsPerCategory = Symbol('numberOfDocsPerCategory'),
 	totalNumberOfDocuments = Symbol('totalNumberOfDocuments'),
-	tokenFrequencyCount = Symbol('tokenFrequencyCount'),
-	tokenCount = Symbol('tokenCount');
+	tokenFrequencyPerCategory = Symbol('tokenFrequencyPerCategory'),
+	numberOfTokensPerCategory = Symbol('numberOfTokensPerCategory');
 
-export default class DataStore extends AbstractDataStore {
+var getCategoryWithName = Symbol('getCategoryWithName');
+
+export default class DataStore {
 	constructor() {
-		super();
-
-		// VOCABULARY
+		// ITERATORS
 		// =============================================================================
-		this[vocabulary] = new Set(); //Set holding all words that have been learnt
-
-		// CATEGORIES
-		// =============================================================================
-		this[categories] = new Set(); //Set holding all category names
+		this[vocabulary] = new Set(); //Set, holding all tokens that have been learnt
+		this[categories] = new Set(); //Set, holding all category names
 
 		// PRIOR PROBABILITY: P(Cj) = docCount(C=cj) / Ndoc
 		// =============================================================================
-
-		/**
-		 * Document frequency table for each of our categories.
-		 * For each category, how many documents were mapped to it.
-		 */
-		this[docFrequencyCount] = {}; //docCount(class) => how many documents exist for `class`
-
-		/**
-		 * A counter that holds the total number of documents we have learnt from.
-		 */
-		this[totalNumberOfDocuments] = 0; //Ndoc => number of documents we have learned from
+		this[numberOfDocsPerCategory] = {}; //docCount(class) => for each class, how many documents are mapped to it
+		this[totalNumberOfDocuments] = 0; //Ndoc => total number of documents that we have learned from
 
 		// LIKELIHOOD: P(wi|Cj) = count(wi,cj) / SUM[(for w in v)] count(w,cj)
 		// =============================================================================
+		this[tokenFrequencyPerCategory] = {}; //count(wi,cj) => for each class, how frequently did a given token appear.
+		this[numberOfTokensPerCategory] = {}; //SUM[(for w in v)] count(w,cj) => for each class, how many unique tokens in total were mapped to it.
 
-		/**
-		 * Word frequency table for each of our categories.
-		 * For each category, how frequently did a given word appear.
-		 */
-		this[tokenFrequencyCount] = {}; //count(wi,cj)
+		// PRIVATE utility functions
+		// =============================================================================
+		this[getCategoryWithName] = function(categoryName) {
+			if (!categoryName) { throw Error('category name cannot be `undefined`'); }
 
-		/**
-		 * Word count table for each of our categories
-		 * For each category, how many words in total were mapped to it.
-		 */
-		this[tokenCount] = {}; //SUM[(for w in v)] count(w,cj) => sum of the times each word exists in a category
+			categoryName = categoryName.toString();
+
+			if (!this[categories].has(categoryName)) {
+				//add new category to our list
+				this[categories].add(categoryName);
+
+				//setup counters
+				this[numberOfDocsPerCategory][categoryName] = 0;
+				this[tokenFrequencyPerCategory][categoryName] = {};
+				this[numberOfTokensPerCategory][categoryName] = 0;
+			}
+
+			return this[categories].has(categoryName) ? categoryName : undefined;
+		}
 	}
 
-	addWordToVocabulary(word) {
-		this[vocabulary].add(word);
-	};
-
-	getVocabularySize() {
+	// VOCABULARY
+	// =============================================================================
+	getVocabularySize() { //used to calculate token probability
 		return this[vocabulary].size;
 	}
 
-	getCategories() {
+	// CATEGORIES
+	// =============================================================================
+	getCategories() { //used for iterating
 		return this[categories];
 	}
 
-	getOrCreateCategory(categoryName) {
-		if (!this[categories].has(categoryName)) {
-			//setup counters
-			this[docFrequencyCount][categoryName] = 0;
-			this[tokenFrequencyCount][categoryName] = {};
-			this[tokenCount][categoryName] = 0;
-
-			//add new category to our list
-			this[categories].add(categoryName);
-		}
-
-		return this[categories].has(categoryName) ? categoryName : undefined;
-	};
-
-	getDocFrequencyCount(categoryName) {
-		return this[docFrequencyCount][categoryName];
+	// DOCUMENTS
+	// =============================================================================
+	add1DocForCategory(categoryName) { //used in learning
+		this[totalNumberOfDocuments] += 1; //increment the total number of documents we have learned from
+		return this[numberOfDocsPerCategory][this[getCategoryWithName](categoryName)] += 1;
 	}
 
-	incrementDocFrequencyCount(categoryName) {
-		this[docFrequencyCount][categoryName] = this[docFrequencyCount][categoryName] || 0;
-		return this[docFrequencyCount][categoryName] += 1;
+	getNumberOfDocsForCategory(categoryName) { //used to calculate category probability
+		return this[numberOfDocsPerCategory][this[getCategoryWithName](categoryName)];
 	}
 
-	getTokenFrequencyCount(categoryName, token) {
-		return this[tokenFrequencyCount][categoryName] ? this[tokenFrequencyCount][categoryName][token] : undefined;
-	}
-
-	incrementTokenFrequencyCount(categoryName, token, amount) {
-		if (this[tokenFrequencyCount][categoryName]){
-			this[tokenFrequencyCount][categoryName][token] = this[tokenFrequencyCount][categoryName][token] || 0;
-			this[tokenFrequencyCount][categoryName][token] += amount;
-		}
-	}
-
-	getTokenCount(categoryName) {
-		return this[tokenCount][categoryName];
-	}
-
-	incrementTokenCount(categoryName, amount) {
-		this[tokenCount][categoryName] = this[tokenCount][categoryName] || 0;
-		this[tokenCount][categoryName] += amount;
-	}
-
-	getTotalNumberOfDocuments() {
+	getTotalNumberOfDocuments() { //used to calculate category probability
 		return this[totalNumberOfDocuments];
 	}
 
-	incrementTotalNumberOfDocuments() {
-		return this[totalNumberOfDocuments] += 1;
+	// TOKEN COUNT
+	// =============================================================================
+	getNumberOfTokensForCategory(categoryName) {  //used to calculate token probability
+		return this[numberOfTokensPerCategory][this[getCategoryWithName](categoryName)];
+	}
+
+	// TOKEN FREQUENCY
+	// =============================================================================
+	getTokenFrequencyForCategory(token, categoryName) { //used to calculate token probability
+		token = token.toString();
+
+		this[tokenFrequencyPerCategory][this[getCategoryWithName](categoryName)][token] = this[tokenFrequencyPerCategory][categoryName][token] || 0;
+		return this[tokenFrequencyPerCategory][categoryName][token];
+	}
+
+	addAmountToTokenFrequencyForCategory(amount, token, categoryName) { //used in learning
+		token = token.toString();
+
+		this[vocabulary].add(token); //make sure token is captured in our vocabulary
+		this.getTokenFrequencyForCategory(token, categoryName); //ensures sanitation and initialisation
+
+		this[tokenFrequencyPerCategory][this[getCategoryWithName](categoryName)][token] += amount;
+		this[numberOfTokensPerCategory][this[getCategoryWithName](categoryName)] += amount;
 	}
 }
-
-//"vocabulary": { //Set
-//	"chinese": true,
-//	"beijing": true,
-//	"shanghai": true,
-//	"macao": true,
-//	"tokyo": true,
-//	"japan": true
-//},
-//"vocabularySize": 6, //Not needed... we can call Set.size()
-//"categories": { //Set
-//	"chinese": true,
-//	"japanese": true
-//},
-//"docFrequencyCount": { //POJO
-//	"chinese": 3,
-//	"japanese": 1
-//},
-//"totalNumberOfDocuments": 4, //POJO
-//"tokenFrequencyCount": { //POJO
-//	"chinese": {
-//		"chinese": 5,
-//		"beijing": 1,
-//		"shanghai": 1,
-//		"macao": 1
-//	},
-//	"japanese": {
-//		"tokyo": 1,
-//		"japan": 1,
-//		"chinese": 1
-//	}
-//},
-//"tokenCount": { //POJO
-//	"chinese": 8,
-//	"japanese": 3
-//}

@@ -23,7 +23,7 @@ export default function withClassifier(classifier) {
 	Object
 	.keys(classifier.vocabulary)
 	.forEach(function(word) {
-		newClassifier.addWordToVocabulary(word);
+		newClassifier.addTokenToVocabulary(word);
 	});
 
 	// Load in categories
@@ -33,7 +33,7 @@ export default function withClassifier(classifier) {
 	Object
 	.keys(classifier.categories)
 	.forEach(function(category) {
-		newClassifier.getOrCreateCategory(category);
+		newClassifier._getCategoryWithName(category);
 	});
 
 	// Load in other properties

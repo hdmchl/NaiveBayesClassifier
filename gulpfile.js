@@ -16,13 +16,13 @@ var paths = {
 };
 
 gulp.task('build', function() {
-	gulp.src(paths.entry)
+	return gulp.src(paths.entry)
 		.pipe(webpack( require('./webpack.config.js') ))
 		.pipe(minify())
 		.pipe(gulp.dest('dist'));
 });
 
-gulp.task('test', function() {
+gulp.task('test', ['build'], function() {
 	return gulp.src(paths.tests)
 		.pipe(mocha({reporter: 'nyan'}));
 });
@@ -45,9 +45,9 @@ gulp.task('default', function() {
 //});
 
 // Build and test, everytime we update the code
-gulp.task('watch-build', function() {
+gulp.task('watch', function() {
 	gulp.start('build');
-	gulp.watch(paths.scripts, ['build', 'test'])
+	gulp.watch([paths.scripts, paths.tests], ['test'])
 		.on('error', function (error) {
 			console.error(error);
 		});

@@ -1,11 +1,6 @@
 /**
  * Determine the category some `text` most likely belongs to.
  * Use Laplace (add-1) smoothing to adjust for words that do not appear in our vocabulary (i.e. unknown words).
- *
- * @param  {String} text - Raw text that needs to be tokenized and categorised.
- * @return {String} category - Category of “maximum a posteriori” (i.e. most likely category), or 'unclassified'
- * @return {Number} probability - The probablity for the category specified
- * @return {Object} categories - Hashmap of probabilities for each category 
  */
 
 'use strict';
@@ -17,24 +12,18 @@ export default function categorize(text) {
 		categoryProbabilities = {}; //probabilities of all categories
 
 	var tokens = this.tokenizer(text),
-		tokenFrequencyTable = this.frequencyTable(tokens);
+		tokenFrequencyMap = this.generateFrequencyMapForTokens(tokens);
 
 	var categories = this.dataStore.getCategories();
 
-	for (let category of categories) {
-	//Object
-	//.keys(this.categories)
-	//.forEach(function(category) { //for each category, find the probability of the text belonging to it
-		if (categories[category]) { return; } //ignore categories that have been switched off
-
+	for (let category of categories) { //for each category, find the probability of the text belonging to it
 		// 1. Find overall probability of this category
 		//=> P(Cj) = docCount(C=cj) / Ndoc
 		// =============================================================================
 		
 		//Put of all documents we've ever looked at, how many were mapped to this category
-		var categoryProbability = this.dataStore.getDocFrequencyCount(category) / this.dataStore.getTotalNumberOfDocuments();
+		var categoryProbability = this.dataStore.getNumberOfDocsForCategory(category) / this.dataStore.getTotalNumberOfDocuments();
 
-		console.log('============', category,  this.dataStore.getDocFrequencyCount(category) , this.dataStore.getTotalNumberOfDocuments(), categoryProbability);
 		//take the log to avoid underflow with large datasets - http://www.johndcook.com/blog/2012/07/26/avoiding-underflow-in-bayesian-computations/
 		var logCategoryProbability = Math.log(categoryProbability); //start with P(Cj), we will add P(wi|Cj) incrementally below
 
@@ -42,18 +31,15 @@ export default function categorize(text) {
 		//=> P(wi|Cj) = count(wi,cj) / SUM[(for w in v) count(w,cj)]
 		// =============================================================================
 
-		Object
-		.keys(tokenFrequencyTable)
-		.forEach(function(token) { //for each token in our token frequency table
-
+		for (var [token, frequency] of tokenFrequencyMap) {
 			//determine the log of the probability of this token belonging to the current category
-			//=> log( P(w|c) )
-			var tokenProbability = this.tokenProbability(token, category);
-			//and add it to our running probability that the text belongs to the current category
-			logCategoryProbability += Math.log(tokenProbability) * tokenFrequencyTable[token];
+			var tokenProbability = this.tokenProbabilityInCategory(token, category); //=> log( P(w|c) )
 
-			 console.log('token: %s | category: `%s` | probability: %d', token, category, tokenProbability);
-		}.bind(this));
+			//and add it to our running probability that the text belongs to the current category
+			logCategoryProbability += Math.log(tokenProbability) * frequency;
+
+			//console.log('token: %s | category: `%s` | probability: %d', token, category, tokenProbability);
+		}
 
 		// 3. Find the most likely category, thus far...
 		// =============================================================================
