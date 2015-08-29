@@ -7,13 +7,16 @@ var vocabulary = Symbol('vocabulary'),
 	tokenFrequencyPerCategory = Symbol('tokenFrequencyPerCategory'),
 	numberOfTokensPerCategory = Symbol('numberOfTokensPerCategory');
 
-var getCategoryWithName = Symbol('getCategoryWithName');
+//private utils
+var getCategoryWithName = Symbol('getCategoryWithName'),
+	sanitizeInput = Symbol('sanitizeInput'),
+	sanitizeAmount = Symbol('sanitizeAmount');
 
 export default class DataStore {
 	constructor() {
 		// ITERATORS
 		// =============================================================================
-		this[vocabulary] = new Set(); //Set, holding all tokens that have been learnt
+		this[vocabulary] = new Set(); //Set, holding all unique tokens that have been learnt
 		this[categories] = new Set(); //Set, holding all category names
 
 		// PRIOR PROBABILITY: P(Cj) = docCount(C=cj) / Ndoc
@@ -29,28 +32,54 @@ export default class DataStore {
 		// PRIVATE utility functions
 		// =============================================================================
 		this[getCategoryWithName] = function(categoryName) {
-			if (!categoryName) { throw Error('category name cannot be `undefined`'); }
-
-			categoryName = categoryName.toString();
+			categoryName = this[sanitizeInput](categoryName);
 
 			if (!this[categories].has(categoryName)) {
 				//add new category to our list
 				this[categories].add(categoryName);
 
-				//setup counters
+				//initlialise counters
 				this[numberOfDocsPerCategory][categoryName] = 0;
 				this[tokenFrequencyPerCategory][categoryName] = {};
 				this[numberOfTokensPerCategory][categoryName] = 0;
 			}
 
 			return this[categories].has(categoryName) ? categoryName : undefined;
-		}
+		};
+
+		this[sanitizeInput] = function(input) {
+			if (typeof input !== 'boolean' &&
+				typeof input !== 'string' &&
+				(typeof input !== 'number' || isNaN(input))) { throw TypeError('input cannot be `' + input + '`'); }
+
+			try {
+				return input.toString();
+			} catch (err) {
+				throw TypeError(err);
+			}
+		};
+
+		this[sanitizeAmount] = function(amount) {
+			if (typeof amount !== 'number' || isNaN(amount)) { throw TypeError('amount cannot be `' + amount + '`'); }
+
+			try {
+				return parseInt(amount) || 0;
+			} catch (err) {
+				throw TypeError(err);
+			}
+		};
 	}
 
 	// VOCABULARY
 	// =============================================================================
 	getVocabularySize() { //used to calculate token probability
 		return this[vocabulary].size;
+	}
+
+	addTokenToVocabulary(token) { //used to ensure we don't double count tokens
+		token = this[sanitizeInput](token);
+
+		return this[vocabulary].add(token);
 	}
 
 	// CATEGORIES
@@ -61,9 +90,10 @@ export default class DataStore {
 
 	// DOCUMENTS
 	// =============================================================================
-	add1DocForCategory(categoryName) { //used in learning
-		this[totalNumberOfDocuments] += 1; //increment the total number of documents we have learned from
-		return this[numberOfDocsPerCategory][this[getCategoryWithName](categoryName)] += 1;
+	incrementNumberOfDocsForCategory(categoryName) { //used in learning
+		let numberOfDocsForCategory = (this[numberOfDocsPerCategory][this[getCategoryWithName](categoryName)] += 1);
+		this[totalNumberOfDocuments] += 1; //increment the total number of documents we have learned from, only after the above call succeeded
+		return numberOfDocsForCategory;
 	}
 
 	getNumberOfDocsForCategory(categoryName) { //used to calculate category probability
@@ -80,22 +110,28 @@ export default class DataStore {
 		return this[numberOfTokensPerCategory][this[getCategoryWithName](categoryName)];
 	}
 
+	incrementNumberOfTokensPerCategoryByAmount(categoryName, amount) {
+		this[numberOfTokensPerCategory][this[getCategoryWithName](categoryName)] += this[sanitizeAmount](amount);
+
+		return this[numberOfTokensPerCategory][this[getCategoryWithName](categoryName)];
+	}
+
 	// TOKEN FREQUENCY
 	// =============================================================================
 	getTokenFrequencyForCategory(token, categoryName) { //used to calculate token probability
-		token = token.toString();
+		token = this[sanitizeInput](token);
 
-		this[tokenFrequencyPerCategory][this[getCategoryWithName](categoryName)][token] = this[tokenFrequencyPerCategory][categoryName][token] || 0;
+		this[tokenFrequencyPerCategory][this[getCategoryWithName](categoryName)][token] = this[tokenFrequencyPerCategory][categoryName][token] || 0; //initialise if required
+
 		return this[tokenFrequencyPerCategory][categoryName][token];
 	}
 
-	addAmountToTokenFrequencyForCategory(amount, token, categoryName) { //used in learning
-		token = token.toString();
+	incrementTokenFrequencyForCategoryByAmount(token, categoryName, amount) {
+		token = this[sanitizeInput](token);
 
-		this[vocabulary].add(token); //make sure token is captured in our vocabulary
-		this.getTokenFrequencyForCategory(token, categoryName); //ensures sanitation and initialisation
+		this[tokenFrequencyPerCategory][this[getCategoryWithName](categoryName)][token] = this[tokenFrequencyPerCategory][categoryName][token] || 0; //initialise if required
+		this[tokenFrequencyPerCategory][this[getCategoryWithName](categoryName)][token] += this[sanitizeAmount](amount);
 
-		this[tokenFrequencyPerCategory][this[getCategoryWithName](categoryName)][token] += amount;
-		this[numberOfTokensPerCategory][this[getCategoryWithName](categoryName)] += amount;
+		return this[tokenFrequencyPerCategory][categoryName][token];
 	}
 }

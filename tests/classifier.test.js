@@ -3,7 +3,7 @@
 var assert = require('assert'),
 	NaiveBayesClassifier = require('../dist/NaiveBayesClassifier');
 
-describe('classifier correctness', function () {
+describe('Classifier correctness', function () {
 	//sentiment analysis test
 	it('should categorizes correctly for `positive` and `negative` categories', function (done) {
 
@@ -21,6 +21,7 @@ describe('classifier correctness', function () {
 
 		//now test it to see that it correctly categorizes a new document
 		assert.equal(classifier.categorize('awesome, cool, amazing!! Yay.').category, 'positive');
+		assert.equal(classifier.categorize('terrible, don\'t know, shitty!! damn.').category, 'negative');
 
 		done();
 	});

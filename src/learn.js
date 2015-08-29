@@ -4,33 +4,38 @@
 
 'use strict';
 
-export default function learn(text, category) {
-	//TODO: do we want to add1DocForCategory on EVERY learn? What about streams...
-	this.dataStore.add1DocForCategory(category); //update our count of how many documents mapped to this category
+export function learn(text, category) {
+	//TODO: do we want to incrementNumberOfDocsForCategory on EVERY learn? What about streams...
+	this.dataStore.incrementNumberOfDocsForCategory(category); //update our count of how many documents mapped to this category
 
-	var tokens = this.tokenizer(text); //break up the text into tokens
-	var tokenFrequencyMap = this.generateFrequencyMapForTokens(tokens); //get a frequency count for each token in the text
+	const tokens = this.tokenizer(text); //break up the text into tokens
+	const tokenFrequencyMap = this.generateFrequencyMapForTokens(tokens); //get a frequency count for each token in the text
 
 	// Update our vocabulary and our word frequency counts for this category
 	// =============================================================================
-	for (var [token, frequency] of tokenFrequencyMap) {
+	for (let [token, frequency] of tokenFrequencyMap) {
+		//ensure that the token is in our vocabulary
+		this.dataStore.addTokenToVocabulary(token);
+
+		//add to the total count of tokens we have seen, that are mapped to this category
+		this.dataStore.incrementNumberOfTokensPerCategoryByAmount(category, frequency);
+
 		//update the frequency information for this token in this category
-		// this will also add to the total count of tokens we have seen, that are mapped to this category
-		// and it will ensure that the token is in our vocabulary
-		this.dataStore.addAmountToTokenFrequencyForCategory(frequency, token, category);
+		this.dataStore.incrementTokenFrequencyForCategoryByAmount(token, category, frequency);
 	}
 };
 
-//TODO: enable streamed learning
-//NaiveBayesClassifier.prototype.createLearnStreamForCategory = function(category) {
-//	return stream ? new stream.Writable({
-//		decodeStrings: false,
-//		write: function write(chunk, encoding, next) {
-//			var text = chunk.toString('utf8');
-//
-//			this.learn(text, category);
-//
-//			next();
-//		}.bind(this)
-//	}) : null;
-//};
+import { Stream } from 'stream-browserify';
+
+export function createLearnStreamForCategory(category) {
+	return Stream ? new Stream.Writable({
+		decodeStrings: false,
+		write: function write(chunk, encoding, next) {
+			var text = chunk.toString('utf8');
+
+			this.learn(text, category);
+
+			next();
+		}.bind(this)
+	}) : undefined;
+};

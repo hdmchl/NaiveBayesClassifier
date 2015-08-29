@@ -1,6 +1,6 @@
 'use strict';
 
-import {default as learn} from './learn';
+import { learn, createLearnStreamForCategory } from './learn';
 import {default as categorize} from './categorize';
 
 import {default as defaultTokenizer} from './utils/defaultTokenizer';
@@ -8,6 +8,7 @@ import {default as defaultTokenizer} from './utils/defaultTokenizer';
 export default class NaiveBayesClassifier {
 	constructor(options={}) {
 		this.learn = learn;
+		this.createLearnStreamForCategory = createLearnStreamForCategory;
 		this.categorize = categorize;
 
 		this.VERSION = NaiveBayesClassifier.VERSION;
