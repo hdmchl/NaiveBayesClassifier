@@ -1,6 +1,15 @@
 [![Build Status](https://img.shields.io/travis/hadimichael/NaiveBayesClassifier/master.svg?style=flat)](https://travis-ci.org/hadimichael/NaiveBayesClassifier) [![Join the chat at https://gitter.im/hadimichael/NaiveBayesClassifier](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/hadimichael/NaiveBayesClassifier?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-NaiveBayesClassifier is an implementation of a [Multinomial Naive-Bayes Classifier](http://en.wikipedia.org/wiki/Naive_Bayes_classifier#Multinomial_naive_Bayes) that uses [Laplace Smoothing](http://en.wikipedia.org/wiki/Additive_smoothing). It takes in a piece of text and tells you which category it most likely belongs to.
+NaiveBayesClassifier is an implementation of a [Multinomial Naive-Bayes Classifier](http://en.wikipedia.org/wiki/Naive_Bayes_classifier#Multinomial_naive_Bayes) that uses [Laplace Smoothing](http://en.wikipedia.org/wiki/Additive_smoothing). It can take in a piece of text and tell you which category it most likely belongs to.
+
+# v0.3.0 IS COMING SOON
+I'm working on the [next version of NaiveBayesClassifer](https://github.com/hadimichael/NaiveBayesClassifier/tree/v0.3.0). Here are some of the new features that you can expect:
+- ✓ Reduced memory (heap) footprint by using Streams.
+- ✓ Refactor to ES2015 and use "more appropriate" data-structures.
+- Optional persistence, probably using REDIS.
+- Asynchronous learning and classifying, using Promises.
+- Categorisation speed improvements, using parallelisation via WebWorkers.
+- Official node/iojs, Chrome OS and Firefox OS support. Other browsers or short-lived apps should use a web-service.
 
 ## What is this good for?
 
@@ -10,7 +19,7 @@ You can use this implementation for categorizing any text content into any arbit
 
 - is an email **spam**, or **not spam**?
 - is a news article about **technology**, **politics**, or **sports**?
-- is the author of some piece of text **male**, or **female**?
+- is some piece of text **javascript** or **objective-c**?
 - is a tweet expressing **positive** sentiment or **negative** sentiment?
 
 Depending on your specific attributes and sample size, there may be other algorithms that are better suited: [Comparison of Classification Methods Based on the Type of Attributes and Sample Size](http://www4.ncsu.edu/~arezaei2/paper/JCIT4-184028_Camera%20Ready.pdf).
@@ -100,7 +109,7 @@ If you would like to explore the full API, you can find auto-generated documenta
 
 # Acknowledgements
 
-This implementation is based on the Stanford NLP [video series](https://www.youtube.com/watch?v=c3fnHA6yLeY) by Professor Dan Jurafsky & Chris Manning. This library modifies and extends work first investigated by [Tolga Tezel](https://twitter.com/tolga_tezel).
+The theory and implementation used in this library is based on the [Stanford Natural Language Processing Coursera](https://www.coursera.org/course/nlp) class, by Professor Dan Jurafsky & Chris Manning.
 
 # License
 
