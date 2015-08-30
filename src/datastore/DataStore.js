@@ -60,13 +60,11 @@ export default class DataStore {
 		};
 
 		this[sanitizeAmount] = function(amount) {
-			if (typeof amount !== 'number' || isNaN(amount)) { throw TypeError('amount cannot be `' + amount + '`'); }
-
-			try {
-				return parseInt(amount) || 0;
-			} catch (err) {
-				throw TypeError(err);
+			if ((typeof amount !== 'string' && typeof amount !== 'number') || isNaN(parseInt(amount))) {
+				throw TypeError('amount cannot be `' + amount + '`');
 			}
+
+			return parseInt(amount);
 		};
 	}
 

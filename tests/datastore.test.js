@@ -5,7 +5,7 @@ var assert = require('assert'),
 
 var validTokenOptions = [ true, false, 0, 123, 123.45, 'my spaced string', 'stringNoSpace', '' ];
 var invalidTokenOptions = [ function(){}, null, undefined, NaN, {}, {a:'b'}, [], ['a','b'], [1,2] ];
-var validAmounts = [0, 1, 5, 20, 100];
+var validAmounts = [0, 1, 5, 20, 100, '0', '2', '50'];
 var invalidAmounts = ['', 'a string', true, false, function(){}, undefined, null, NaN, {}, {a:1}, [], [1,2,3], ['', 'a']];
 
 describe('DataStore sanitization and vocabulary add/size functions', function () {
@@ -24,7 +24,7 @@ describe('DataStore sanitization and vocabulary add/size functions', function ()
 		done();
 	});
 
-	it('should raise an Error when asked to add an invalid token to its vocabulary', function() {
+	it('should raise an Error when asked to add an invalid token to its vocabulary', function(done) {
 		var classifier = new NaiveBayesClassifier();
 
 		assert.deepEqual(classifier.dataStore, {});
@@ -35,6 +35,8 @@ describe('DataStore sanitization and vocabulary add/size functions', function ()
 		});
 
 		assert.equal(classifier.dataStore.getVocabularySize(), 0);
+
+		done();
 	});
 });
 
@@ -95,7 +97,7 @@ describe('DataStore token counting', function() {
 		var total = 0;
 
 		validAmounts.forEach(function(amount) {
-			total += amount;
+			total += parseInt(amount);
 			validTokenOptions.forEach(function(validOption) {
 				classifier.dataStore.incrementNumberOfTokensPerCategoryByAmount(validOption, amount);
 
@@ -149,7 +151,7 @@ describe('DataStore token frequency counting', function() {
 		var total = 0;
 
 		validAmounts.forEach(function(amount) {
-			total += amount;
+			total += parseInt(amount);
 			validTokenOptions.forEach(function(validOption) {
 				classifier.dataStore.incrementTokenFrequencyForCategoryByAmount(validOption, validOption, amount);
 
