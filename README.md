@@ -2,14 +2,16 @@
 
 NaiveBayesClassifier is an implementation of a [Multinomial Naive-Bayes Classifier](http://en.wikipedia.org/wiki/Naive_Bayes_classifier#Multinomial_naive_Bayes) that uses [Laplace Smoothing](http://en.wikipedia.org/wiki/Additive_smoothing). It can take in a piece of text and tell you which category it most likely belongs to.
 
-# v0.3.0 IS COMING SOON
+**I haven't really touched this in a few years... maybe I'll come back to it one day.**
+
+~~# v0.3.0 IS COMING SOON
 I'm working on the [next version of NaiveBayesClassifer](https://github.com/hadimichael/NaiveBayesClassifier/tree/v0.3.0). Here are some of the new features that you can expect:
 - ✓ Reduced memory (heap) footprint by using Streams.
 - ✓ Refactor to ES2015 and use "more appropriate" data-structures.
 - Optional persistence, probably using REDIS.
 - Asynchronous learning and classifying, using Promises.
 - Categorisation speed improvements, using parallelisation via WebWorkers.
-- Official node/iojs, Chrome OS and Firefox OS support. Other browsers or short-lived apps should use a web-service.
+- Official node/iojs, Chrome OS and Firefox OS support. Other browsers or short-lived apps should use a web-service.~~
 
 ## What is this good for?
 
