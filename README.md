@@ -4,14 +4,14 @@ NaiveBayesClassifier is an implementation of a [Multinomial Naive-Bayes Classifi
 
 **I haven't really touched this in a few years... maybe I'll come back to it one day.**
 
-~~# v0.3.0 IS COMING SOON
-I'm working on the [next version of NaiveBayesClassifer](https://github.com/hadimichael/NaiveBayesClassifier/tree/v0.3.0). Here are some of the new features that you can expect:
-- ✓ Reduced memory (heap) footprint by using Streams.
-- ✓ Refactor to ES2015 and use "more appropriate" data-structures.
-- Optional persistence, probably using REDIS.
-- Asynchronous learning and classifying, using Promises.
-- Categorisation speed improvements, using parallelisation via WebWorkers.
-- Official node/iojs, Chrome OS and Firefox OS support. Other browsers or short-lived apps should use a web-service.~~
+# ~~v0.3.0 IS COMING SOON~~
+~~I'm working on the [next version of NaiveBayesClassifer](https://github.com/hadimichael/NaiveBayesClassifier/tree/v0.3.0). Here are some of the new features that you can expect:~~
+- ~~✓ Reduced memory (heap) footprint by using Streams.~~
+- ~~✓ Refactor to ES2015 and use "more appropriate" data-structures.~~
+- ~~Optional persistence, probably using REDIS.~~
+- ~~Asynchronous learning and classifying, using Promises.~~
+- ~~Categorisation speed improvements, using parallelisation via WebWorkers.~~
+- ~~Official node/iojs, Chrome OS and Firefox OS support. Other browsers or short-lived apps should use a web-service.~~
 
 ## What is this good for?
 
